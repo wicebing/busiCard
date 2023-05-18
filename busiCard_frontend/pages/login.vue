@@ -78,7 +78,6 @@ async function commitLogin () {
         useStore.setToken(data.value.access)
         console.log('useStore',useStore.token,useStore.$state.isAuthenticated)
         getCurrentUser()
-        navigateTo('/')
     }
 
 }
@@ -86,7 +85,7 @@ async function commitLogin () {
 async function getCurrentUser() {
     errors.value = []
     try{
-        const { data, error } = await useFetch('/api/whoami/', {
+        const { data, pending, refresh, error } = await useFetch('/api/whoami/', {
             method: 'GET',
             baseURL: apiConfig.API_ENDPOINT,
             headers: {
@@ -98,20 +97,29 @@ async function getCurrentUser() {
             console.log('Error:', error.value);
         } else {
             console.log('Current user:', data.value);
-            useStore.setUserDetail(data.value.id,
-            data.value.username,
-            data.value.email,
-            data.value.is_staff,
-            data.value.is_superuser,
-            data.value.table_staff
-            ) 
+            if (data.value) {
+                useStore.setUserDetail(data.value.id,
+                data.value.username,
+                data.value.email,
+                data.value.is_staff,
+                data.value.is_superuser,
+                ) 
+            } 
             console.log('getUser',useStore.getUserDetail())
+            navigateTo('/')
         }        
     } catch (error) {
         console.log('ALLerror',error)
         errors.value.push('please try again')
     }
 }
+
+onMounted(() => {
+    useStore.initStore()
+    if (useStore.isAuthenticated) {
+      getCurrentUser()
+    }
+})
 
 
 </script>
