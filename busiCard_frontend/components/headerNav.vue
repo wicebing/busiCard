@@ -57,6 +57,16 @@ const optionsUser= ref([
             }
           }
         },
+        {
+          label: '連結管理',
+          key: 'linkManage',
+          props: {
+            onClick: () => {
+            //   message.success('Good!')
+            navigateTo('/linkManage')
+            }
+          }
+        },
       ])
 
 </script>

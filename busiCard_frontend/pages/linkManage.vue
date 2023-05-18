@@ -4,7 +4,11 @@ const useStore = useUserStore()
 
 <template>
   <indexHead />
-
+  <div class="py-10 px-6 defalutBackground">
+    <div class="space-y-4">
+        test3
+    </div>
+  </div>
 </template>
 
 <style scoped>

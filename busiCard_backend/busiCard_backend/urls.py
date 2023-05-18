@@ -31,6 +31,10 @@ urlpatterns = [
     path('api/whoami/', views.get_current_user, name='get_current_user'),
     path('api/regist/', views.UserGenericView.as_view(), name='regist'),
     path('api/regist/<pk>/', views.UserDetailGenericView.as_view()),
+    path('api/businessCard/', views.BusinessCardGenericView.as_view(), name='businessCard'),
+    path('api/businessCard/<pk>/', views.BusinessCardDetailGenericView.as_view()),
+    path('api/personalLink/', views.PersonalLinkGenericView.as_view(), name='personalLink'),
+    path('api/personalLink/<pk>/', views.PersonalLinkDetailGenericView.as_view()),
 
     path('token/', views.MyObtainTokenPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

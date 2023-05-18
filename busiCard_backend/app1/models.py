@@ -10,18 +10,17 @@ def user_directory_path(instance, filename):
 class Table_businessCard(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     logo = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     background = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
-    color = models.CharField(max_length=20)
+    color = models.CharField(max_length=20, default="#0068bd33")
 
     def __str__(self):
         return self.name
 
     def clean(self):
-        if self.email == "" and self.name == "":
-            raise ValidationError("Must have either email or name")
+        if self.name == "":
+            raise ValidationError("Must have name")
 
     @transaction.atomic
     def save(self, *args, **kwargs):

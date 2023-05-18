@@ -48,7 +48,6 @@ onMounted(() => {
 <template>
   <NuxtLayout name="default">
     <template #header> 
-      <headerNav/>
     </template>
     <template #main> 
       <NuxtPage/>

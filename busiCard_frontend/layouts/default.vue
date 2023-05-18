@@ -1,4 +1,4 @@
-<script lang='ts' setup>
+<script setup>
 import { NLayoutFooter, NLayoutHeader,  } from 'naive-ui'
 // import { useUserStore } from '../composables/user.js'
 const useStore = useUserStore()
@@ -6,19 +6,6 @@ const useStore = useUserStore()
 
 <template>
     <div>
-        <n-layout-header>
-          <nav class="flex items-center justify-between flex-wrap font-mono">
-            <NuxtLink to="/" >
-                <span class="box-decoration-clone bg-gradient-to-r from-indigo-600 to-pink-500 text-white px-2 font-bold font-mono text-xl">
-                  BusiCard
-                </span>
-            </NuxtLink>
-            <div v-if=useStore.isAuthenticated>
-              <span> Hello, {{ useStore.username }} </span>             
-            </div>
-            <slot name="header"/>
-          </nav>
-        </n-layout-header>
         <div>
           <slot name="main"/>
         </div>
