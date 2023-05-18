@@ -51,3 +51,14 @@ class PersonalLinkSerializer(serializers.ModelSerializer):
         if data['startDate'] > data['endDate']:
             raise serializers.ValidationError("開始日期不能大於結束日期")
         return data
+    
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super(MyTokenObtainPairSerializer, cls).get_token(user)
+
+        # 添加额外信息
+        token['username'] = user.username
+        return token

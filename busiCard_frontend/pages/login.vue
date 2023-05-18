@@ -2,6 +2,7 @@
 import { NTabPane, NCard, NTabs, NForm, NFormItemRow, NInput, NButton } from 'naive-ui'
 import { NIcon } from 'naive-ui'
 import { GlassesOutline, Glasses } from '@vicons/ionicons5'
+import { apiConfig } from "@/apiConfig";
 
 // import { useUserStore } from '../composables/user.js'
 
@@ -15,6 +16,7 @@ const errors = ref([])
 const repeatPW = ref('')
 
 const useStore = useUserStore()
+// const config = useRuntimeConfig()
 
 async function commitSignup () {
     console.log('commitSignup')
@@ -30,7 +32,7 @@ async function commitSignup () {
     try{
         const { data, pending, refresh, error } = await useFetch('/api/regist/', {
             method: 'POST',
-            baseURL:'http://localhost:8000',
+            baseURL:apiConfig.API_ENDPOINT,
             body: {
                 username: staff.name,
                 email: staff.email,
@@ -58,7 +60,7 @@ async function commitLogin () {
     errors.value = []
     const { data, pending, refresh, error } = await useFetch('/token/', {
         method: 'POST',
-        baseURL:'http://localhost:8000',
+        baseURL:apiConfig.API_ENDPOINT,
         body: {
             username: staff.name,
             password: staff.password,
@@ -86,7 +88,7 @@ async function getCurrentUser() {
     try{
         const { data, error } = await useFetch('/api/whoami/', {
             method: 'GET',
-            baseURL: 'http://localhost:8000',
+            baseURL: apiConfig.API_ENDPOINT,
             headers: {
                 Authorization: `JWT ${useStore.token}`,
             },

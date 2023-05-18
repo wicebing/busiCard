@@ -34,5 +34,10 @@ export default defineNuxtConfig({
         ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
       ],
     },
+    runtimeConfig: {
+      public: {
+        baseApiURL: process.env.BASE_URL || 'http://localhost:8000',
+      },
+    },
   })
   

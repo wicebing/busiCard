@@ -63,7 +63,9 @@ class UserDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
 
  
 
-
+class MyObtainTokenPairView(TokenObtainPairView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = MyTokenObtainPairSerializer
 
 @api_view(['GET'])
 # @permission_classes([IsStaff])
@@ -78,3 +80,4 @@ def get_current_user(request):
         'is_staff': user.is_staff,
         'is_superuser': user.is_superuser,
     }, status=status.HTTP_200_OK)
+
