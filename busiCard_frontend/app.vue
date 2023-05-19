@@ -1,5 +1,8 @@
 <script setup>
 import { apiConfig } from "@/apiConfig";
+const route = useRoute()
+const { id } = route.params
+
 const useStore = useUserStore()
 const errors = ref([])
 
@@ -37,10 +40,12 @@ async function getCurrentUser() {
 }
 
 onMounted(() => {
+  if (!id){
     useStore.initStore()
     if (useStore.isAuthenticated) {
       getCurrentUser()
-    }
+    }    
+  }
 })
 </script>
 

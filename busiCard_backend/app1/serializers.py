@@ -38,9 +38,12 @@ class UserSerializerWithToken(UserSerializer):
         return str(token)
 
 class BusinessCardSerializer(serializers.ModelSerializer):
+    AUTH_name = serializers.StringRelatedField(source='user.username', read_only=True)
+    
     class Meta:
         model = Table_businessCard
         fields = '__all__'
+        extra_fields = ['AUTH_name']
 
     
 class PersonalLinkSerializer(serializers.ModelSerializer):

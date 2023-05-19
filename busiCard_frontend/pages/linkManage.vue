@@ -181,50 +181,52 @@ onMounted(() => {
           >
               add Link
           </n-button>
-          <table class="table-auto min-w-full">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th v-for="col in columns" class="px-2 py-1 text-xs font-bold text-gray-500" scope="col">{{ col.title }}</th>
+          <div style="overflow-x: auto;">
+            <table class="table-auto min-w-full">
+              <thead class="bg-gray-50">
+                  <tr>
+                      <th v-for="col in columns" class="px-2 py-1 text-xs font-bold text-gray-500" scope="col">{{ col.title }}</th>
+                  </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr v-for="(res, rowIndex) in personalLink">
+                  <td v-for="col in columns" class="px-2 py-2 text-sm font-medium text-gray-800 whitespace-nowrap">
+                    <n-button 
+                    v-if="!res[col.key] && col.title === 'Edit'"
+                    secondary
+                    type='info'
+                    @click= null
+                    >
+                        {{ col.key }}
+                    </n-button>
+
+                    <n-button 
+                    v-if="!res[col.key]  && col.title === 'Delete'"
+                    secondary strong type='error'
+                    @click=null
+                    :disabled="!editing[rowIndex]"
+                    >
+                        {{ col.key }}
+                    </n-button>
+
+                    <n-switch v-if="col.title==='Delete'" v-model:value="editing[rowIndex]" />
+
+                    <div v-if="res[col.key] !== null && res[col.key] !== undefined ">
+                      <div v-if="col.key === 'link'">
+                        <ul><a :href="res[col.key]" target="_blank">{{ truncateUrl(res[col.key]) }}</a> </ul>
+                        <ul class="bg-green-200">{{ truncateUrl(res['description']) }}</ul>
+                        <ul class="bg-green-100">{{ truncateUrl(res['footnote']) }}</ul>
+                        <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
+                      </div>
+                      <div v-if="col.key === 'click'">
+                        {{ res[col.key] }}
+                      </div>
+                    </div>                              
+                  </td>
                 </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <tr v-for="(res, rowIndex) in personalLink">
-                <td v-for="col in columns" class="px-2 py-2 text-sm font-medium text-gray-800 whitespace-nowrap">
-                  <n-button 
-                  v-if="!res[col.key] && col.title === 'Edit'"
-                  secondary
-                  type='info'
-                  @click= null
-                  >
-                      {{ col.key }}
-                  </n-button>
-
-                  <n-button 
-                  v-if="!res[col.key]  && col.title === 'Delete'"
-                  secondary strong type='error'
-                  @click=null
-                  :disabled="!editing[rowIndex]"
-                  >
-                      {{ col.key }}
-                  </n-button>
-
-                  <n-switch v-if="col.title==='Delete'" v-model:value="editing[rowIndex]" />
-
-                  <div v-if="res[col.key] !== null && res[col.key] !== undefined ">
-                    <div v-if="col.key === 'link'">
-                      <ul><a :href="res[col.key]" target="_blank">{{ truncateUrl(res[col.key]) }}</a> </ul>
-                      <ul class="bg-green-200">{{ res['description'] }}</ul>
-                      <ul class="bg-green-100">{{ res['footnote'] }}</ul>
-                      <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
-                    </div>
-                    <div v-if="col.key === 'click'">
-                      {{ res[col.key] }}
-                    </div>
-                  </div>                              
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </n-tab-pane>
         <n-tab-pane name="allLink" tab="歷史">
           <table class="table-auto min-w-full">
@@ -239,8 +241,8 @@ onMounted(() => {
                   <div v-if="res[col.key] !== null && res[col.key] !== undefined ">
                     <div v-if="col.key === 'link'">
                       <ul><a :href="res[col.key]" target="_blank">{{ truncateUrl(res[col.key]) }}</a> </ul>
-                      <ul class="bg-green-200">{{ res['description'] }}</ul>
-                      <ul class="bg-green-100">{{ res['footnote'] }}</ul>
+                      <ul class="bg-green-200">{{ truncateUrl(res['description']) }}</ul>
+                      <ul class="bg-green-100">{{ truncateUrl(res['footnote']) }}</ul>
                       <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
                     </div>
                     <div v-if="col.key === 'click'">

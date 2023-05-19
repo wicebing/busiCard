@@ -1,5 +1,5 @@
-<script lang="ts" setup>
-import { NIcon, NDropdown } from 'naive-ui'
+<script setup>
+import { NIcon, NDropdown, NButton } from 'naive-ui'
 const useStore = useUserStore()
 const useRoute = useRouter()
 
@@ -48,16 +48,6 @@ const optionsUser= ref([
           }
         },
         {
-          label: '版面設定',
-          key: 'layoutSetting',
-          props: {
-            onClick: () => {
-            //   message.success('Good!')
-            navigateTo('/layoutSetting')
-            }
-          }
-        },
-        {
           label: '連結管理',
           key: 'linkManage',
           props: {
@@ -69,6 +59,10 @@ const optionsUser= ref([
         },
       ])
 
+function toBusiCard() {
+  navigateTo(`/${useStore.username}`)
+}
+
 </script>
 
 <template>
@@ -79,5 +73,7 @@ const optionsUser= ref([
         <n-dropdown v-if=useStore.isAuthenticated trigger="hover" :options="optionsUser">
             <span class="text-sky-800 hover:text-white">個人</span>
         </n-dropdown>
+        <n-button class="py-2 px-2 text-black rounded-xl font-semibold" :on-click="toBusiCard">預覽</n-button>
+
     </div>
 </template>

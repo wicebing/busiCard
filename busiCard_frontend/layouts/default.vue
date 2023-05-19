@@ -12,7 +12,8 @@ const useStore = useUserStore()
 
         <n-layout-footer class="p-6 flex flex-wrap item-center justify-between font-mono">
             <p class="text-white font-bold ">Copyright (c) 2023 yAbI Lab</p>
-            <p class="text-white font-bold">Personal Business Card</p>
+            <NuxtLink to="/"><p class="text-white font-bold">Personal Business Card</p></NuxtLink>
+            
             <slot name="footer"/>
 
         </n-layout-footer>
