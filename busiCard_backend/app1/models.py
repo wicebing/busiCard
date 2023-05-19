@@ -48,3 +48,12 @@ class Table_personalLink(models.Model):
 
     def __str__(self):
         return self.link
+    
+class Table_linkIPClick(models.Model):
+    id = models.AutoField(primary_key=True)
+    link = models.ForeignKey(Table_personalLink, on_delete=models.CASCADE)
+    ip = models.CharField(max_length=100)
+    clickTime = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.ip

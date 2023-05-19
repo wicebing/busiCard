@@ -120,9 +120,35 @@ class PersonalLinkDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
     permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
 
+class LinkIPClickGenericView(generics.ListCreateAPIView):
+    queryset = Table_linkIPClick.objects.all()
+    serializer_class = LinkIPClickSerializer
+    authentication_classes = (JWTAuthentication,SessionAuthentication,)
+    filter_backends = (DjangoFilterBackend,filters.OrderingFilter,filters.SearchFilter)
+
+    permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
+
+class LinkIPClickDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Table_linkIPClick.objects.all()
+    serializer_class = LinkIPClickSerializer
+    authentication_classes = (JWTAuthentication,SessionAuthentication,)
+    permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
 
 
 
+
+
+@permission_classes([permissions.AllowAny,])
+class LinkClickView(APIView):
+    def post(self, request, *args, **kwargs):
+        link_id = request.data.get('link_id')
+        ip = request.META.get('REMOTE_ADDR')
+        try:
+            link = Table_personalLink.objects.get(id=link_id)
+            Table_linkIPClick.objects.create(link=link, ip=ip)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Table_personalLink.DoesNotExist:
+            return Response({"error": "Link not found"}, status=status.HTTP_404_NOT_FOUND)
 
 @authentication_classes([JWTAuthentication,SessionAuthentication])
 class UploadLogoView(views.APIView):

@@ -55,6 +55,10 @@ class PersonalLinkSerializer(serializers.ModelSerializer):
     #         raise serializers.ValidationError("開始日期不能大於結束日期")
     #     return data
     
+class LinkIPClickSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Table_linkIPClick
+        fields = '__all__'
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

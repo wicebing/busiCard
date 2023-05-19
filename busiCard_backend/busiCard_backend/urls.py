@@ -36,6 +36,10 @@ urlpatterns = [
     path('api/businessCard/<pk>/', views.BusinessCardDetailGenericView.as_view()),
     path('api/personalLink/', views.PersonalLinkGenericView.as_view(), name='personalLink'),
     path('api/personalLink/<pk>/', views.PersonalLinkDetailGenericView.as_view()),
+    path('api/linkIPClick/', views.LinkIPClickGenericView.as_view(), name='linkIPClick'),
+    path('api/linkIPClick/<pk>/', views.LinkIPClickDetailGenericView.as_view()),
+    path('api/linkClick/', views.LinkClickView.as_view(), name='link_click'),
+
 
     path('token/', views.MyObtainTokenPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

@@ -56,6 +56,20 @@ async function getLinks (personalProfile) {
   }
 }
 
+async function handleLinkClick(linkId) {
+    console.log('handleLinkClick',linkId)
+    const ip = '...' // Retrieve the user's IP address here
+    const { data, pending, refresh, error } = await useFetch('/api/linkClick/', {
+        method: 'POST',
+        baseURL: apiConfig.API_ENDPOINT,
+        
+        body: JSON.stringify({
+            link_id: linkId,
+            ip: ip
+            }),
+    })
+}
+
 onMounted(() => {
   getPerson()
 })
@@ -95,10 +109,10 @@ onMounted(() => {
             <n-form>
                 <div class="space-y-2">
                     <ul v-for="item in personalAllLink" :key="item.id">
-                        <NuxtLink :to="item.link">
-                            <div class="py-4 px-6 text-white hover:bg-sky-500 rounded-xl font-semibold">
-                                <div class="text-lg">
-                                    {{ item.description }}
+                        <NuxtLink  @click="handleLinkClick(item.id)">
+                            <div class="text-gray-700 rounded-xl font-semibold">
+                                <div class="text-lg hover:bg-pink-200">
+                                    {{ item.description }} {{ item.id }}
                                 </div>
                                 <div>
                                     <n-image
