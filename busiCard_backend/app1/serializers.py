@@ -1,7 +1,7 @@
 from datetime import datetime
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from django.db.models import F, ExpressionWrapper, IntegerField
+from django.db.models import F, ExpressionWrapper, IntegerField, Sum
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import *
 
@@ -47,18 +47,34 @@ class BusinessCardSerializer(serializers.ModelSerializer):
 
     
 class PersonalLinkSerializer(serializers.ModelSerializer):
+    total_clicks = serializers.SerializerMethodField()
+    unique_clicks = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Table_personalLink
         fields = '__all__'
-    # def validate(self, data):
-    #     if data['startDate'] > data['endDate']:
-    #         raise serializers.ValidationError("開始日期不能大於結束日期")
-    #     return data
+        extra_fields = ['total_clicks','unique_clicks']
+    def get_total_clicks(self, obj):
+        total = Table_linkIPClick.objects.filter(link=obj).aggregate(Sum('count'))['count__sum']
+        return total if total else 0
+    
+    def get_unique_clicks(self, obj):
+        unique_clicks = Table_linkIPClick.objects.filter(link=obj).values('ip').distinct().count()
+        return unique_clicks if unique_clicks else 0
     
 class LinkIPClickSerializer(serializers.ModelSerializer):
+    total_clicks = serializers.SerializerMethodField()
     class Meta:
         model = Table_linkIPClick
         fields = '__all__'
+    
+    def get_total_clicks(self, obj):
+        return obj.count
+    
+    def get_unique_clicks(self, obj):
+        unique_clicks = Table_linkIPClick.objects.filter(link=obj).values('ip').distinct().count()
+        return unique_clicks if unique_clicks else 0
+
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
