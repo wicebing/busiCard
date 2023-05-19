@@ -3,6 +3,7 @@ import { NButton, NTabs, NTabPane, NSwitch, NDrawer, NDrawerContent, NSelect } f
 import { NFormItemRow, NInput, NForm, NDatePicker } from 'naive-ui'
 import { apiConfig } from "@/apiConfig";
 
+const errors = ref([])
 const useStore = useUserStore()
 const personalLink = reactive({})
 const editing = reactive([])
@@ -16,6 +17,8 @@ const newLink = reactive({
     footnote: "",
     startDate: null,
     endDate: null,
+    startDateStr: null,
+    endDateStr: null,
     user: useStore.id,
   })
 
@@ -39,10 +42,6 @@ const columns = ref([
     {
       title: 'link',
       key: 'link'
-    },
-    {
-      title: 'startDate',
-      key: 'startDate'
     },
     {
       title: 'click',
@@ -82,6 +81,7 @@ async function getProject () {
           console.log('personalLink',personalLink)
       } else {
           console.log('error',error)
+          errors.value.push(error.value.data)
       }
   } catch (err) {
       console.log('err',err)
@@ -89,12 +89,13 @@ async function getProject () {
 }
 
 async function addData() {
+  errors.value = []
   try {
     console.log('addData')
     console.log('NEWdate',newLink)
-    newLink.startDate = formatDate(new Date(newLink.startDate))
-    newLink.endDate = formatDate(new Date(newLink.endDate))
-    console.log('NEWdate',newLink)
+    newLink.startDate = formatDate(new Date(newLink.startDateStr))
+    newLink.endDate = formatDate(new Date(newLink.endDateStr))
+    console.log('NEWdate',JSON.stringify(newLink))
     const { data, pending, refresh, error } = await useFetch('/api/personalLink/', {
         method: 'POST',
         baseURL:apiConfig.API_ENDPOINT,
@@ -106,14 +107,15 @@ async function addData() {
 
     if (data.value) {
         console.log('NEWdate data.value',data.value)
+        getProject()
+        switchAddLink()
     } else {
         console.log('error',error)
+        errors.value.push(error.value.data)
     }
   } catch (error) {
     console.error('Error deleting data:', error);
   }
-  getProject()
-  switchAddLink()
 }
 
 onMounted(() => {
@@ -174,10 +176,7 @@ onMounted(() => {
                       <ul>{{ res[col.key] }} </ul>
                       <ul class="bg-green-200">{{ res['description'] }}</ul>
                       <ul class="bg-green-100">{{ res['footnote'] }}</ul>
-                    </div>
-                    <div v-if="col.key === 'startDate'">
-                      <ul>{{ res[col.key] }} ~</ul> 
-                      <ul>{{ res['endDate'] }}</ul>
+                      <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
                     </div>
                     <div v-if="col.key === 'click'">
                       {{ res[col.key] }}
@@ -207,11 +206,16 @@ onMounted(() => {
                   <n-input placeholder="footnote" v-model:value="newLink.footnote" />
               </n-form-item-row>
               <n-form-item-row label="startDate">
-                  <n-date-picker type="date"  v-model:value="newLink.startDate" />
+                  <n-date-picker type="date"  v-model:value="newLink.startDateStr" />
               </n-form-item-row>
               <n-form-item-row label="endDate">
-                  <n-date-picker type="date"  v-model:value="newLink.endDate" />
+                  <n-date-picker type="date"  v-model:value="newLink.endDateStr" />
               </n-form-item-row>
+              <div v-if="errors.length" class="mb-6 py-4 px-6 bg-rose-400 rounded-xl">
+                  <p v-for="error in errors">
+                    {{ error }}
+                  </p>
+              </div>
               <n-button type="primary" block secondary strong @click="addData">
               新增
               </n-button>

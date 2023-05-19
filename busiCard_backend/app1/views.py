@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 # Create your views here.
 from django.http import HttpResponse
@@ -115,6 +115,9 @@ class PersonalLinkGenericView(generics.ListCreateAPIView):
         print(user)
         if user is not None:
             queryset = queryset.filter(user=user)
+        
+        # Filter where endDate is greater than today
+        queryset = queryset.filter(endDate__gt=date.today())
         return queryset
     
 class PersonalLinkDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
