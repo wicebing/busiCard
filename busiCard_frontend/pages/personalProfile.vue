@@ -1,5 +1,5 @@
 <script setup>
-import {NButton,NForm, NFormItemRow, NInput, NSwitch, NColorPicker, NDivider} from 'naive-ui'
+import {NButton,NForm, NFormItemRow, NInput, NSwitch, NColorPicker, NDivider, NUpload} from 'naive-ui'
 import { apiConfig } from "@/apiConfig";
 const useStore = useUserStore()
 
@@ -162,6 +162,12 @@ onMounted(() => {
           <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="personalProfile.name" />
         </n-form-item-row>
         <n-form-item-row label="logo" v-if="personalProfile.id">
+          <n-upload
+            action="__HTTP__://www.mocky.io/v2/5e4bafc63100007100d8b70f"
+            list-type="image-card"
+          >
+            上傳個人logo
+          </n-upload>
         </n-form-item-row>
         <n-form-item-row label="background" v-if="personalProfile.id">
         </n-form-item-row>

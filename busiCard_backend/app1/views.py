@@ -8,7 +8,7 @@ from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q, Count
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 
-from rest_framework import filters
+from rest_framework import filters, views, parsers, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, mixins, generics, viewsets, permissions
@@ -118,6 +118,29 @@ class PersonalLinkDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PersonalLinkSerializer
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
     permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
+
+
+
+
+
+
+class UploadLogoView(views.APIView):
+    parser_classes = [parsers.MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        file = request.data.get('file')
+
+        if not file:
+            return Response({"file": ["No file uploaded!"]}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Here, `request.user` is the user who is uploading the file. Replace this with
+        # the actual user who should be associated with the file.
+        business_card = Table_businessCard.objects.get(user=request.user)
+
+        business_card.logo = file
+        business_card.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
