@@ -54,6 +54,7 @@ class Table_linkIPClick(models.Model):
     link = models.ForeignKey(Table_personalLink, on_delete=models.CASCADE)
     ip = models.CharField(max_length=100)
     clickTime = models.DateTimeField(auto_now_add=True)
+    count = models.IntegerField(default=1)
 
     def __str__(self):
         return self.ip

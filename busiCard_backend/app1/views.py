@@ -143,12 +143,19 @@ class LinkClickView(APIView):
     def post(self, request, *args, **kwargs):
         link_id = request.data.get('link_id')
         ip = request.META.get('REMOTE_ADDR')
+        link = Table_personalLink.objects.get(id=link_id)
+        
         try:
-            link = Table_personalLink.objects.get(id=link_id)
-            Table_linkIPClick.objects.create(link=link, ip=ip)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Table_personalLink.DoesNotExist:
-            return Response({"error": "Link not found"}, status=status.HTTP_404_NOT_FOUND)
+            ipclick = Table_linkIPClick.objects.get(ip=ip, link=link)
+            # If it exists, increment the count
+            ipclick.count += 1
+            ipclick.save()
+        except Table_linkIPClick.DoesNotExist:
+            # If it doesn't exist, create a new one
+            Table_linkIPClick.objects.create(ip=ip, link=link)
+
+        # You can return a response here if you want
+        return JsonResponse({'message': 'Success'}, status=200)
 
 @authentication_classes([JWTAuthentication,SessionAuthentication])
 class UploadLogoView(views.APIView):
