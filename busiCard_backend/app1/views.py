@@ -112,12 +112,13 @@ class PersonalLinkGenericView(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Table_personalLink.objects.all()
         user = self.request.query_params.get('user', None)
-        print(user)
+        active = self.request.query_params.get('active', None)
         if user is not None:
             queryset = queryset.filter(user=user)
         
         # Filter where endDate is greater than today
-        queryset = queryset.filter(endDate__gt=date.today())
+        if active is not None:
+            queryset = queryset.filter(endDate__gt=date.today())
         return queryset
     
 class PersonalLinkDetailGenericView(generics.RetrieveUpdateDestroyAPIView):

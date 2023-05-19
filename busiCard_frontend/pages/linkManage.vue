@@ -6,36 +6,43 @@ import { apiConfig } from "@/apiConfig";
 const errors = ref([])
 const useStore = useUserStore()
 const personalLink = reactive({})
+const personalAllLink = reactive({})
 const editing = reactive([])
 const activeDrawerLinkEdit = ref(false)
 const activeDrawerLinkAdd = ref(false)
 const placementDrawer = ref('right')
 
 const newLink = reactive({
-    link: "",
-    description: "",
-    footnote: "",
-    startDate: null,
-    endDate: null,
-    startDateStr: null,
-    endDateStr: null,
-    user: useStore.id,
-  })
+  link: "",
+  description: "",
+  footnote: "",
+  startDate: null,
+  endDate: null,
+  startDateStr: null,
+  endDateStr: null,
+  user: useStore.id,
+})
 
 const originalLink = reactive({
-    id: "",
-    NTUHid: "",
-    name: "",
-    birthday: "",
-    AUTHid: null
+  link: "",
+  description: "",
+  footnote: "",
+  startDate: null,
+  endDate: null,
+  startDateStr: null,
+  endDateStr: null,
+  user: useStore.id,
 });
 
 const editLink = reactive({
-    id:"",
-    NTUHid: "",
-    name: "",
-    birthday: "",
-    AUTHid: null,
+  link: "",
+  description: "",
+  footnote: "",
+  startDate: null,
+  endDate: null,
+  startDateStr: null,
+  endDateStr: null,
+  user: useStore.id,
 })
 
 const columns = ref([
@@ -54,6 +61,17 @@ const columns = ref([
     },
 ])
 
+const columnsAll = ref([
+    {
+      title: 'link',
+      key: 'link'
+    },
+    {
+      title: 'click',
+      key: 'click'
+    },
+])
+
 function formatDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -65,8 +83,18 @@ function switchAddLink(){
     activeDrawerLinkAdd.value = !activeDrawerLinkAdd.value
 }
 
+function truncateUrl(url, length = 30) {
+    return url.length > length ? url.substring(0, length) + "..." : url;
+}
+
 async function getProject () {
   console.log('getProject')
+  for (const key in personalLink) {
+        delete personalLink[key];
+  }
+  for (const key in personalAllLink) {
+      delete personalAllLink[key];
+  }
   try{
       const { data, pending, refresh, error } = await useFetch(`/api/personalLink/?user=${useStore.id}`, {
           method: 'GET',
@@ -77,7 +105,18 @@ async function getProject () {
       })
 
       if (data.value) {
-          Object.assign(personalLink, data.value.results)
+        
+          // Get today's date
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);  // Set the time to 00:00:00
+
+          // Filter personalLink where endDate is not before today
+          const filteredPersonalLink = data.value.results.filter(link => {
+              const endDate = new Date(link.endDate);
+              return endDate >= today;
+          });
+          Object.assign(personalLink, filteredPersonalLink)
+          Object.assign(personalAllLink, data.value.results)
           console.log('personalLink',personalLink)
       } else {
           console.log('error',error)
@@ -145,7 +184,7 @@ onMounted(() => {
           <table class="table-auto min-w-full">
             <thead class="bg-gray-50">
                 <tr>
-                    <th v-for="col in columns" class="px-2 py-4 text-xs font-bold text-gray-500" scope="col">{{ col.title }}</th>
+                    <th v-for="col in columns" class="px-2 py-1 text-xs font-bold text-gray-500" scope="col">{{ col.title }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -173,7 +212,7 @@ onMounted(() => {
 
                   <div v-if="res[col.key] !== null && res[col.key] !== undefined ">
                     <div v-if="col.key === 'link'">
-                      <ul>{{ res[col.key] }} </ul>
+                      <ul><a :href="res[col.key]" target="_blank">{{ truncateUrl(res[col.key]) }}</a> </ul>
                       <ul class="bg-green-200">{{ res['description'] }}</ul>
                       <ul class="bg-green-100">{{ res['footnote'] }}</ul>
                       <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
@@ -188,7 +227,30 @@ onMounted(() => {
           </table>
         </n-tab-pane>
         <n-tab-pane name="allLink" tab="歷史">
-
+          <table class="table-auto min-w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th v-for="col in columnsAll" class="px-2 py-1 text-xs font-bold text-gray-500" scope="col">{{ col.title }}</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr v-for="(res, rowIndex) in personalAllLink">
+                <td v-for="col in columnsAll" class="px-2 py-2 text-sm font-medium text-gray-800 whitespace-nowrap">
+                  <div v-if="res[col.key] !== null && res[col.key] !== undefined ">
+                    <div v-if="col.key === 'link'">
+                      <ul><a :href="res[col.key]" target="_blank">{{ truncateUrl(res[col.key]) }}</a> </ul>
+                      <ul class="bg-green-200">{{ res['description'] }}</ul>
+                      <ul class="bg-green-100">{{ res['footnote'] }}</ul>
+                      <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
+                    </div>
+                    <div v-if="col.key === 'click'">
+                      {{ res[col.key] }}
+                    </div>
+                  </div>                              
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </n-tab-pane>
       </n-tabs>
     </div>
