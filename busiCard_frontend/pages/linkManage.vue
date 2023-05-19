@@ -22,6 +22,7 @@ const newLink = reactive({
   startDateStr: null,
   endDateStr: null,
   user: useStore.id,
+  sequence: 0,
 })
 
 const originalLink = reactive({
@@ -33,6 +34,7 @@ const originalLink = reactive({
   startDateStr: null,
   endDateStr: null,
   user: useStore.id,
+  sequence: 0,
 });
 
 const editLink = reactive({
@@ -44,6 +46,7 @@ const editLink = reactive({
   startDateStr: null,
   endDateStr: null,
   user: useStore.id,
+  sequence: 0,
 })
 
 const columns = ref([
@@ -388,6 +391,9 @@ onMounted(() => {
               <n-form-item-row label="footnote">
                   <n-input placeholder="footnote" v-model:value="newLink.footnote" />
               </n-form-item-row>
+              <n-form-item-row label="sequence">
+                  <n-input placeholder="sequence" v-model:value="newLink.sequence" />
+              </n-form-item-row>
               <n-form-item-row label="startDate">
                   <n-date-picker type="date"  v-model:value="newLink.startDateStr" />
               </n-form-item-row>
@@ -416,6 +422,9 @@ onMounted(() => {
               </n-form-item-row>
               <n-form-item-row label="footnote">
                   <n-input placeholder="footnote" v-model:value="editLink.footnote" />
+              </n-form-item-row>
+              <n-form-item-row label="sequence">
+                  <n-input placeholder="sequence" v-model:value="editLink.sequence" />
               </n-form-item-row>
               <n-form-item-row label="startDate">
                   <n-date-picker type="date"  v-model:value="convertStartDate(editLink).value" />

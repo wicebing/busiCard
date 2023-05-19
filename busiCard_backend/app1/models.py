@@ -45,6 +45,7 @@ class Table_personalLink(models.Model):
     startDate = models.DateField()
     endDate = models.DateField()
     show = models.BooleanField(default=True)
+    sequence = models.IntegerField(default=0)
 
     def __str__(self):
         return self.link

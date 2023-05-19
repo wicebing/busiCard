@@ -86,7 +86,7 @@ class BusinessCardDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
     
 class PersonalLinkGenericView(generics.ListCreateAPIView):
-    queryset = Table_personalLink.objects.all()
+    queryset = Table_personalLink.objects.all().order_by('-sequence')
     serializer_class = PersonalLinkSerializer
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
     filter_backends = (DjangoFilterBackend,filters.OrderingFilter,filters.SearchFilter)
@@ -101,7 +101,7 @@ class PersonalLinkGenericView(generics.ListCreateAPIView):
         return []
     
     def get_queryset(self):
-        queryset = Table_personalLink.objects.all()
+        queryset = Table_personalLink.objects.all().order_by('-sequence')
         user = self.request.query_params.get('user', None)
         active = self.request.query_params.get('active', None)
         if user is not None:
@@ -144,7 +144,7 @@ class LinkClickView(APIView):
         link_id = request.data.get('link_id')
         ip = request.META.get('REMOTE_ADDR')
         link = Table_personalLink.objects.get(id=link_id)
-        
+
         try:
             ipclick = Table_linkIPClick.objects.get(ip=ip, link=link)
             # If it exists, increment the count
