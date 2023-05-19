@@ -6,6 +6,10 @@ const { id } = route.params
 const useStore = useUserStore()
 const errors = ref([])
 
+function toBusiCard() {
+  navigateTo(`/${id}`)
+}
+
 async function getCurrentUser() {
     errors.value = []
     console.log('getCurrentUser by token',useStore.token)
@@ -45,6 +49,9 @@ onMounted(() => {
     if (useStore.isAuthenticated) {
       getCurrentUser()
     }    
+  } else {
+    // useStore.initStore()
+    // toBusiCard()
   }
 })
 </script>

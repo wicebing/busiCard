@@ -65,7 +65,7 @@ class BusinessCardGenericView(generics.ListCreateAPIView):
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
     filter_backends = (DjangoFilterBackend,filters.OrderingFilter,filters.SearchFilter)
 
-    # permission_classes = (IsOwnerOrAdmin,)
+    permission_classes = (IsOwnerOrAdmin,)
 
     def get_permissions(self):
         if self.request.method == 'POST':
@@ -78,7 +78,6 @@ class BusinessCardGenericView(generics.ListCreateAPIView):
         queryset = Table_businessCard.objects.all()
         user = self.request.query_params.get('user', None)
         auth = self.request.query_params.get('auth', None)
-        print(user)
         if user is not None:
             queryset = queryset.filter(user=user)
         if auth is not None:
@@ -92,7 +91,7 @@ class BusinessCardDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsOwnerOrAdmin,)
     def get_permissions(self):
         if self.request.method == 'PUT':
-            return [IsOwnerOrAdmin,]
+            return [IsOwnerOrAdmin]
         if self.request.method == 'GET':
             return [permissions.IsAuthenticated(),]
         return []
