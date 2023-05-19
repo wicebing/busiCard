@@ -27,6 +27,13 @@ class Table_businessCard(models.Model):
         self.full_clean()
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        # You have to prepare the file's deletion before it's actually deleted
+        storage, path = self.logo.storage, self.logo.path
+        super().delete(*args, **kwargs)
+        # the file is deleted after the model is deleted
+        storage.delete(path)
+
 class Table_personalLink(models.Model):
     id = models.AutoField(primary_key=True)
     link = models.URLField(max_length=200)

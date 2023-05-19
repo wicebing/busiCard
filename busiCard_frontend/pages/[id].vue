@@ -96,15 +96,17 @@ onMounted(() => {
                 <div class="space-y-2">
                     <ul v-for="item in personalAllLink" :key="item.id">
                         <NuxtLink :to="item.link">
-                            <div class="text-lg">
-                                {{ item.description }}
-                            </div>
-                            <div>
-                                <n-image
-                                    v-if="item.pic"
-                                    width="100"
-                                    src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-                                />
+                            <div class="py-4 px-6 text-white hover:bg-sky-500 rounded-xl font-semibold">
+                                <div class="text-lg">
+                                    {{ item.description }}
+                                </div>
+                                <div>
+                                    <n-image
+                                        v-if="item.pic"
+                                        width="100"
+                                        src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                                    />
+                                </div>
                             </div>
                         </NuxtLink>
                         <n-divider dashed/>
@@ -115,4 +117,10 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.n-card {
+  max-width: 300px;
+}
+</style>
 

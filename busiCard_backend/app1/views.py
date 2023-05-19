@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q, Count
 from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.core.files.storage import default_storage
 
 from rest_framework import filters, views, parsers, status
 from rest_framework.views import APIView
@@ -136,6 +137,9 @@ class UploadLogoView(views.APIView):
         # Here, `request.user` is the user who is uploading the file. Replace this with
         # the actual user who should be associated with the file.
         business_card = Table_businessCard.objects.get(user=request.user)
+
+        if business_card.logo and default_storage.exists(business_card.logo.name):
+            default_storage.delete(business_card.logo.name)
 
         business_card.logo = file
         business_card.save()
