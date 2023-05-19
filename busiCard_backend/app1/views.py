@@ -123,7 +123,7 @@ class PersonalLinkDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-
+@authentication_classes([JWTAuthentication,SessionAuthentication])
 class UploadLogoView(views.APIView):
     parser_classes = [parsers.MultiPartParser]
 

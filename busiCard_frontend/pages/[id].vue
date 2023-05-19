@@ -81,13 +81,14 @@ onMounted(() => {
             <n-form>
                 <div class="space-y-2">
                     <n-avatar
+                        v-if="personalProfile.logo"
                         round
                         size="large"
-                        src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-                        />
-                        <div>
-                            personalProfile description
-                        </div>                      
+                        v-model:src="personalProfile.logo"
+                    />
+                    <div>
+                        personalProfile description
+                    </div>                      
                 </div>   
             </n-form>
             <n-divider />
@@ -100,11 +101,13 @@ onMounted(() => {
                             </div>
                             <div>
                                 <n-image
+                                    v-if="item.pic"
                                     width="100"
                                     src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
                                 />
                             </div>
                         </NuxtLink>
+                        <n-divider dashed/>
                     </ul>
                 </div>
             </n-form>

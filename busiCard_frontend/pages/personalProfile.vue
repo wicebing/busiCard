@@ -1,5 +1,5 @@
 <script setup>
-import {NButton,NForm, NFormItemRow, NInput, NSwitch, NColorPicker, NDivider, NUpload} from 'naive-ui'
+import {NButton,NForm, NFormItemRow, NInput, NSwitch, NColorPicker, NDivider, NUpload, NImage} from 'naive-ui'
 import { apiConfig } from "@/apiConfig";
 const useStore = useUserStore()
 
@@ -113,6 +113,34 @@ async function updatePerson () {
   }
 }
 
+const handleLogoUpload = async (file, fileList) => {
+    // Create a FormData object
+    let formData = new FormData();
+
+    // Append file to formData object
+    formData.append('file', file.raw);
+
+    // Use useFetch to send the file to the server
+    const { data, error } = await useFetch(`/api/upload/logo/`, {
+        method: 'POST',
+        baseURL: apiConfig.API_ENDPOINT,
+        headers: {
+            Authorization: `JWT ${useStore.token}`
+        },
+        body: formData
+    });
+
+    if (data.value) {
+        // The file upload was successful
+        console.log('File upload successful');
+    } else {
+        // There was an error uploading the file
+        console.log('Error uploading file: ', error);
+    }
+}
+
+
+
 async function updateAuth () {
   console.log('updateAuth')
   const updatedFields = {}
@@ -162,9 +190,19 @@ onMounted(() => {
           <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="personalProfile.name" />
         </n-form-item-row>
         <n-form-item-row label="logo" v-if="personalProfile.id">
+          <n-image
+            v-if="personalProfile.logo"
+            width="600"
+            v-model:src="personalProfile.logo"
+          />
           <n-upload
-            action="__HTTP__://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-            list-type="image-card"
+          :action="`${apiConfig.API_ENDPOINT}/api/upload/logo/`"
+          :headers="{
+              Authorization: `JWT ${useStore.token}`
+          }"
+          list-type="image-card"
+          @file-change="handleLogoUpload"
+          :disabled="!editPersonal"
           >
             上傳個人logo
           </n-upload>
