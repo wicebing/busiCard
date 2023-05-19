@@ -1,6 +1,6 @@
 <script setup>
 import { apiConfig } from "@/apiConfig";
-import { NDivider } from 'naive-ui'
+import { NDivider, NWatermark, NCard, NAvatar, NSpace } from 'naive-ui'
 
 const route = useRoute()
 
@@ -63,14 +63,43 @@ onMounted(() => {
 </script>
 
 <template>
-匹配到的 Id: <span class="text-5xl font-semibold text-blue-600">{{ id }}</span>
+    <n-watermark
+    v-model:content="personalProfile.name"
+    cross
+    fullscreen
+    :font-size="16"
+    :line-height="16"
+    :width="384"
+    :height="384"
+    :x-offset="12"
+    :y-offset="60"
+    :rotate="-15"
+    />
+    <div class="py-10 px-6" :style="{ background: backgroundColor }">
+        <div class="space-y-4">
+            {{personalProfile}}
+            <n-card 
+            v-model:title="personalProfile.name"
+            size="small"
+            >
+                <template #header-extra>
+                    <n-avatar
+                    round
+                    size="large"
+                    src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                    />
+                </template>
+                <template #footer>
+                    卡片内容
+                </template>
+                <template #action>
+                    卡片内容
+                </template>
 
-<div class="py-10 px-6" :style="{ background: backgroundColor }">
-    <div class="space-y-4">
-        {{personalProfile}}
-        <n-divider />
-        {{ personalAllLink }}
+            </n-card>
+            <n-divider />
+            {{ personalAllLink }}
+        </div>
     </div>
-</div>
 </template>
 
