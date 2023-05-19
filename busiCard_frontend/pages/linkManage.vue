@@ -52,8 +52,12 @@ const columns = ref([
       key: 'link'
     },
     {
-      title: 'click',
-      key: 'click'
+      title: 'VC',
+      key: 'unique_clicks'
+    },
+    {
+      title: 'AC',
+      key: 'total_clicks'
     },
     {
       title: 'Edit',
@@ -67,8 +71,12 @@ const columnsAll = ref([
       key: 'link'
     },
     {
-      title: 'click',
-      key: 'click'
+      title: 'VC',
+      key: 'unique_clicks'
+    },
+    {
+      title: 'AC',
+      key: 'total_clicks'
     },
     {
       title: 'Edit',
@@ -289,13 +297,16 @@ onMounted(() => {
                     <div v-if="res[col.key] !== null && res[col.key] !== undefined ">
                       <div v-if="col.key === 'link'">
                         <ul>
-                        <NuxtLink :to="res[col.key]">{{ truncateUrl(res[col.key]) }}</NuxtLink>
+                        <NuxtLink :to="res[col.key]">{{ truncateUrl(res[col.key],length=20) }}</NuxtLink>
                         </ul>
-                        <ul class="bg-green-200">{{ truncateUrl(res['description']) }}</ul>
-                        <ul class="bg-green-100">{{ truncateUrl(res['footnote']) }}</ul>
+                        <ul class="bg-green-200">{{ truncateUrl(res['description'],length=10) }}</ul>
+                        <ul class="bg-green-100">{{ truncateUrl(res['footnote'],length=10) }}</ul>
                         <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
                       </div>
-                      <div v-if="col.key === 'click'">
+                      <div v-if="col.key === 'unique_clicks'">
+                        {{ res[col.key] }}
+                      </div>
+                      <div v-if="col.key === 'total_clicks'">
                         {{ res[col.key] }}
                       </div>
                     </div>                              
@@ -315,14 +326,21 @@ onMounted(() => {
             <tbody class="divide-y divide-gray-200">
               <tr v-for="(res, rowIndex) in personalAllLink">
                 <td v-for="col in columnsAll" class="px-2 py-2 text-sm font-medium text-gray-800 whitespace-nowrap">
-                  <n-button 
-                  v-if="!res[col.key]  && col.title === 'Delete'"
-                  secondary strong type='error'
-                  @click=deleteData(res)
-                  :disabled="!editingAll[rowIndex]"
-                  >
-                      {{ col.key }}
-                  </n-button>
+                  <div v-if="!res[col.key]  && col.title === 'Delete'">
+                    <ul>
+                      <n-button 
+                      secondary strong type='error'
+                      @click=deleteData(res)
+                      :disabled="!editingAll[rowIndex]"
+                      >
+                          {{ col.key }}
+                      </n-button>                      
+                    </ul>
+                    <ul>
+                      <n-switch v-model:value="editingAll[rowIndex]" />
+                    </ul>
+                  </div>
+
                   <n-button 
                     v-if="!res[col.key] && col.title === 'Edit'"
                     secondary
@@ -331,19 +349,23 @@ onMounted(() => {
                     >
                         {{ col.key }}
                     </n-button>
-                  <n-switch v-if="col.title==='Delete'" v-model:value="editingAll[rowIndex]" />
+                  
 
                   <div v-if="res[col.key] !== null && res[col.key] !== undefined ">
                     <div v-if="col.key === 'link'">
                       <ul>
-                        <NuxtLink :to="res[col.key]">{{ truncateUrl(res[col.key],length=20) }}</NuxtLink>
+                        <NuxtLink :to="res[col.key]">{{ truncateUrl(res[col.key],length=12) }}</NuxtLink>
                       </ul>
-                      <ul class="bg-green-200">{{ truncateUrl(res['description'],length=10) }}</ul>
-                      <ul class="bg-green-100">{{ truncateUrl(res['footnote'],length=10) }}</ul>
-                      <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
+                      <ul class="bg-green-200">{{ truncateUrl(res['description'],length=5) }}</ul>
+                      <ul class="bg-green-100">{{ truncateUrl(res['footnote'],length=5) }}</ul>
+                      <ul class="bg-red-100">{{ res['startDate'] }}</ul>
+                      <ul class="bg-red-100">{{ res['endDate'] }}</ul>
                     </div>
-                    <div v-if="col.key === 'click'">
+                    <div v-if="col.key === 'unique_clicks'">
                       {{ res[col.key] }}
+                    </div>
+                    <div v-if="col.key === 'total_clicks'">
+                        {{ res[col.key] }}
                     </div>
                   </div>                              
                 </td>
