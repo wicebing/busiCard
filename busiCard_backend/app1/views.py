@@ -51,13 +51,7 @@ class UserDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
-    permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
-    def get_permissions(self):
-        if self.request.method == 'PUT':
-            return [IsOwnerOrAdmin(),]
-        if self.request.method == 'GET':
-            return [permissions.IsAdminUser(),]
-        return []
+    permission_classes = (IsOwnerOrAdmin,)
 
 class BusinessCardGenericView(generics.ListCreateAPIView):
     queryset = Table_businessCard.objects.all()
@@ -89,12 +83,6 @@ class BusinessCardDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BusinessCardSerializer
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
     permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
-    def get_permissions(self):
-        if self.request.method == 'PUT':
-            return [IsOwnerOrAdmin()]
-        if self.request.method == 'GET':
-            return [IsOwnerOrAdmin(),]
-        return []
     
 class PersonalLinkGenericView(generics.ListCreateAPIView):
     queryset = Table_personalLink.objects.all()
@@ -130,13 +118,6 @@ class PersonalLinkDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PersonalLinkSerializer
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
     permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
-    def get_permissions(self):
-        if self.request.method == 'PUT':
-            return [IsOwnerOrAdmin()]
-        if self.request.method == 'GET':
-            return [permissions.IsAuthenticated(),]
-        return []
-
 
 
 

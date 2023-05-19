@@ -2,14 +2,12 @@
 import { NButton } from 'naive-ui'
 const useStore = useUserStore()
 
-const router = useRouter()
-
 const errors = ref([])
 async function signOut() {
     errors.value = []
     useStore.removeToken()
     useStore.removeUserDetail()
-    router.push('/')
+    navigateTo('/')
 }
 
 </script>

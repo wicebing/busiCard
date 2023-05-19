@@ -1,11 +1,13 @@
 <script setup>
-import {NButton,NForm, NFormItemRow, NInput, NSwitch, NColorPicker, } from 'naive-ui'
+import {NButton,NForm, NFormItemRow, NInput, NSwitch, NColorPicker, NDivider} from 'naive-ui'
 import { apiConfig } from "@/apiConfig";
 const useStore = useUserStore()
 
 const result = reactive({})
 const errors = ref([])
 const personalProfile = reactive({})
+const authProfile = reactive({})
+const authProfileOrigin = reactive({})
 
 const editPersonal = ref(false)
 
@@ -27,6 +29,30 @@ async function getProject () {
       if (data.value) {
           Object.assign(personalProfile, data.value.results[0])
           console.log('personalProfile',personalProfile)
+          resetColor()
+      } else {
+          console.log('error',error)
+      }
+  } catch (err) {
+      console.log('err',err)
+  }
+}
+
+async function getAuth () {
+  console.log('getAuth')
+  try{
+      const { data, pending, refresh, error } = await useFetch(`/api/regist/${useStore.id}`, {
+          method: 'GET',
+          baseURL:apiConfig.API_ENDPOINT,
+          headers: {
+              Authorization: `JWT ${useStore.token}` 
+          }
+      })
+      console.log('data',data)
+      if (data.value) {
+          Object.assign(authProfile, data.value)
+          Object.assign(authProfileOrigin, data.value)
+          console.log('authProfile',authProfile)
           resetColor()
       } else {
           console.log('error',error)
@@ -87,8 +113,37 @@ async function updatePerson () {
   }
 }
 
+async function updateAuth () {
+  console.log('updateAuth')
+  const updatedFields = {}
+  for (const key in authProfile) {
+      if (authProfile[key] !== authProfileOrigin[key]) {
+          updatedFields[key] = authProfile[key];
+      }        
+  }
+  console.log('updatedFields',updatedFields)
+  try {
+      const { data, pending, refresh, error } = await useFetch(`/api/regist/${useStore.id}/`, {
+          method: 'PATCH',
+          baseURL:apiConfig.API_ENDPOINT,
+          headers: {
+              Authorization: `JWT ${useStore.token}` 
+          },
+          body: JSON.stringify(updatedFields),
+      })
+      if (data.value) {
+      } else {
+          console.log('error',error)
+          errors.value.push(error.value.data)
+      }
+  } catch (err) {
+      console.log('err',err)
+  }
+}
+
 onMounted(() => {
   getProject()
+  getAuth()
 })
 
 </script>
@@ -102,7 +157,8 @@ onMounted(() => {
         
         <n-switch v-model:value="editPersonal" />
         <n-form inline> </n-form>
-        <n-form-item-row label="名稱">
+
+        <n-form-item-row label="顯示名稱">
           <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="personalProfile.name" />
         </n-form-item-row>
         <n-form-item-row label="logo" v-if="personalProfile.id">
@@ -127,11 +183,32 @@ onMounted(() => {
             </p>
         </div>
         <n-button v-if="personalProfile.id" type="info" block secondary strong @click="updatePerson">
-            更正
+            修改
         </n-button>
         <n-button v-if="!personalProfile.id" type="info" block secondary strong @click="createPerson">
             新增
-        </n-button>     
+        </n-button>
+
+        <n-divider />
+        <div v-if="editPersonal">
+          <n-form-item-row label="帳號名稱">
+          <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.username" />
+          </n-form-item-row>
+          <n-form-item-row label="密碼">
+            <n-input type="password" :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.password" />
+          </n-form-item-row> 
+          <n-form-item-row label="Email">
+            <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.email" />
+          </n-form-item-row>      
+          <n-button type="info" block secondary strong @click="updateAuth">
+              修改
+          </n-button>        
+        </div>
+
+        
+
+
+
       </n-form>
     </div>
   </div>
