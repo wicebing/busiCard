@@ -109,6 +109,14 @@ class PersonalLinkGenericView(generics.ListCreateAPIView):
             return [permissions.IsAuthenticated()]
         return []
     
+    def get_queryset(self):
+        queryset = Table_personalLink.objects.all()
+        user = self.request.query_params.get('user', None)
+        print(user)
+        if user is not None:
+            queryset = queryset.filter(user=user)
+        return queryset
+    
 class PersonalLinkDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Table_personalLink.objects.all()
     serializer_class = PersonalLinkSerializer
