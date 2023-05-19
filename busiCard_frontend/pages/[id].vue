@@ -1,6 +1,6 @@
 <script setup>
 import { apiConfig } from "@/apiConfig";
-import { NDivider, NWatermark, NCard, NAvatar, NSpace } from 'naive-ui'
+import { NDivider, NWatermark, NCard, NAvatar, NSpace, NForm, NImage } from 'naive-ui'
 
 const route = useRoute()
 
@@ -67,38 +67,48 @@ onMounted(() => {
     v-model:content="personalProfile.name"
     cross
     fullscreen
-    :font-size="16"
-    :line-height="16"
-    :width="384"
-    :height="384"
+    :font-size="64"
+    :line-height="64"
+    :width="284"
+    :height="284"
     :x-offset="12"
     :y-offset="60"
     :rotate="-15"
     />
     <div class="py-10 px-6" :style="{ background: backgroundColor }">
-        <div class="space-y-4">
-            {{personalProfile}}
-            <n-card 
-            v-model:title="personalProfile.name"
-            size="small"
-            >
-                <template #header-extra>
+        <div class="space-y-4 text-center items-center justify-between">
+            <!-- {{personalProfile}} -->
+            <n-form>
+                <div class="space-y-2">
                     <n-avatar
-                    round
-                    size="large"
-                    src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-                    />
-                </template>
-                <template #footer>
-                    卡片内容
-                </template>
-                <template #action>
-                    卡片内容
-                </template>
-
-            </n-card>
+                        round
+                        size="large"
+                        src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                        />
+                        <div>
+                            personalProfile description
+                        </div>                      
+                </div>   
+            </n-form>
             <n-divider />
-            {{ personalAllLink }}
+            <n-form>
+                <div class="space-y-2">
+                    <ul v-for="item in personalAllLink" :key="item.id">
+                        <NuxtLink :to="item.link">
+                            <div class="text-lg">
+                                {{ item.description }}
+                            </div>
+                            <div>
+                                <n-image
+                                    width="100"
+                                    src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                                />
+                            </div>
+                        </NuxtLink>
+                    </ul>
+                </div>
+            </n-form>
+            <!-- {{ personalAllLink }} -->
         </div>
     </div>
 </template>

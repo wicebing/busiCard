@@ -35,7 +35,7 @@ async function getCurrentUser() {
                 ) 
             } 
             console.log('getUser',useStore.getUserDetail())
-            navigateTo('/')
+            // navigateTo('/')
         }       
     } catch (error) {
         console.log('ALLerror',error)

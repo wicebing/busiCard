@@ -51,10 +51,10 @@ class UserDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
-    permission_classes = (IsOwnerOrAdmin,)
+    permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
     def get_permissions(self):
         if self.request.method == 'PUT':
-            return [IsOwnerOrAdmin,]
+            return [IsOwnerOrAdmin(),]
         if self.request.method == 'GET':
             return [permissions.IsAdminUser(),]
         return []
@@ -65,7 +65,7 @@ class BusinessCardGenericView(generics.ListCreateAPIView):
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
     filter_backends = (DjangoFilterBackend,filters.OrderingFilter,filters.SearchFilter)
 
-    permission_classes = (IsOwnerOrAdmin,)
+    permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
 
     def get_permissions(self):
         if self.request.method == 'POST':
@@ -88,12 +88,12 @@ class BusinessCardDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Table_businessCard.objects.all()
     serializer_class = BusinessCardSerializer
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
-    permission_classes = (IsOwnerOrAdmin,)
+    permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
     def get_permissions(self):
         if self.request.method == 'PUT':
-            return [IsOwnerOrAdmin]
+            return [IsOwnerOrAdmin()]
         if self.request.method == 'GET':
-            return [permissions.IsAuthenticated(),]
+            return [IsOwnerOrAdmin(),]
         return []
     
 class PersonalLinkGenericView(generics.ListCreateAPIView):
@@ -102,7 +102,7 @@ class PersonalLinkGenericView(generics.ListCreateAPIView):
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
     filter_backends = (DjangoFilterBackend,filters.OrderingFilter,filters.SearchFilter)
 
-    permission_classes = (IsOwnerOrAdmin,)
+    permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
 
     def get_permissions(self):
         if self.request.method == 'POST':
@@ -118,19 +118,21 @@ class PersonalLinkGenericView(generics.ListCreateAPIView):
         if user is not None:
             queryset = queryset.filter(user=user)
         
-        # Filter where endDate is greater than today
         if active is not None:
+            # Filter where endDate is greater than today
             queryset = queryset.filter(endDate__gt=date.today())
+            # Filter where startDate is less than today
+            queryset = queryset.filter(startDate__lt=date.today())
         return queryset
     
 class PersonalLinkDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Table_personalLink.objects.all()
     serializer_class = PersonalLinkSerializer
     authentication_classes = (JWTAuthentication,SessionAuthentication,)
-    permission_classes = (IsOwnerOrAdmin,)
+    permission_classes = (IsOwnerOrAdmin,permissions.IsAuthenticatedOrReadOnly,)
     def get_permissions(self):
         if self.request.method == 'PUT':
-            return [IsOwnerOrAdmin,]
+            return [IsOwnerOrAdmin()]
         if self.request.method == 'GET':
             return [permissions.IsAuthenticated(),]
         return []

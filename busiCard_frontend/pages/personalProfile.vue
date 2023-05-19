@@ -27,6 +27,7 @@ async function getProject () {
       if (data.value) {
           Object.assign(personalProfile, data.value.results[0])
           console.log('personalProfile',personalProfile)
+          resetColor()
       } else {
           console.log('error',error)
       }
@@ -104,9 +105,9 @@ onMounted(() => {
         <n-form-item-row label="名稱">
           <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="personalProfile.name" />
         </n-form-item-row>
-        <n-form-item-row label="logo">
+        <n-form-item-row label="logo" v-if="personalProfile.id">
         </n-form-item-row>
-        <n-form-item-row label="background">
+        <n-form-item-row label="background" v-if="personalProfile.id">
         </n-form-item-row>
         
         <n-form inline>        

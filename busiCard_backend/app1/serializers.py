@@ -50,10 +50,10 @@ class PersonalLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table_personalLink
         fields = '__all__'
-    def validate(self, data):
-        if data['startDate'] > data['endDate']:
-            raise serializers.ValidationError("開始日期不能大於結束日期")
-        return data
+    # def validate(self, data):
+    #     if data['startDate'] > data['endDate']:
+    #         raise serializers.ValidationError("開始日期不能大於結束日期")
+    #     return data
     
 
 

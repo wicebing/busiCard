@@ -8,6 +8,7 @@ const useStore = useUserStore()
 const personalLink = reactive({})
 const personalAllLink = reactive({})
 const editing = reactive([])
+const editingAll = reactive([])
 const activeDrawerLinkEdit = ref(false)
 const activeDrawerLinkAdd = ref(false)
 const placementDrawer = ref('right')
@@ -57,7 +58,6 @@ const columns = ref([
     {
       title: 'Edit',
       key: 'Edit',
-      render: () => 'Edit'
     },
 ])
 
@@ -69,6 +69,14 @@ const columnsAll = ref([
     {
       title: 'click',
       key: 'click'
+    },
+    {
+      title: 'Edit',
+      key: 'Edit',
+    },
+    {
+      title: 'Delete',
+      key: 'Delete',
     },
 ])
 
@@ -85,6 +93,30 @@ function switchAddLink(){
 
 function truncateUrl(url, length = 30) {
     return url.length > length ? url.substring(0, length) + "..." : url;
+}
+
+function convertStartDate(editLink) {
+    console.log('convertDate', editLink.startDate)
+  return computed({
+    get: () => new Date(editLink.startDate).getTime(),
+    set: (newValue) => (editLink.startDate = formatDate(new Date(newValue))),
+  });
+}
+
+function convertEndDate(editLink) {
+    console.log('convertDate', editLink.endDate)
+  return computed({
+    get: () => new Date(editLink.endDate).getTime(),
+    set: (newValue) => (editLink.endDate = formatDate(new Date(newValue))),
+  });
+}
+
+async function editData(row) {
+    console.log("Row:", row)
+    Object.assign(editLink, row)
+    Object.assign(originalLink, row); // Store the original data before editing
+    console.log("editProject:", editLink)
+    activeDrawerLinkEdit.value = true
 }
 
 async function getProject () {
@@ -109,11 +141,15 @@ async function getProject () {
           // Get today's date
           const today = new Date();
           today.setHours(0, 0, 0, 0);  // Set the time to 00:00:00
+          console.log('today',today)
 
           // Filter personalLink where endDate is not before today
           const filteredPersonalLink = data.value.results.filter(link => {
               const endDate = new Date(link.endDate);
-              return endDate >= today;
+              const startDate = new Date(link.startDate);
+              console.log('endDate',endDate)
+              console.log('startDate',startDate)
+              return endDate >= today && startDate <= today;
           });
           Object.assign(personalLink, filteredPersonalLink)
           Object.assign(personalAllLink, data.value.results)
@@ -157,6 +193,56 @@ async function addData() {
   }
 }
 
+async function deleteData(row) {
+    try {
+        console.log('deleteData', row)
+        const { data, pending, refresh, error } = await useFetch(`/api/personalLink/${row.id}`, {
+          method: 'DELETE',
+          baseURL:apiConfig.API_ENDPOINT,
+          headers: {
+          Authorization: `JWT ${useStore.token}`,
+          },
+        })
+
+        console.log('deleteData', row)
+        console.log('Deleted successfully')
+        console.log('Error: ', error.value)
+    } catch (error) {
+        console.error('Error deleting data:', error);
+    }
+    getProject()
+}
+
+async function updateData() {
+    console.log("Updating data:", editLink);
+    const updatedFields = {}
+    for (const key in editLink) {
+        if (editLink[key] !== originalLink[key]) {
+            updatedFields[key] = editLink[key];
+            console.log("Updated fields key:", key);
+        }        
+    }
+    console.log("Updated fields:", updatedFields);
+    console.log(editLink.id)
+
+    try {
+        const { data, pending, refresh, error } = await useFetch(`/api/personalLink/${editLink.id}/`, {
+            method: 'PATCH',
+            baseURL:apiConfig.API_ENDPOINT,
+            headers: {
+            Authorization: `JWT ${useStore.token}`,
+            },
+            body: JSON.stringify(updatedFields),
+        });
+
+        console.log("Updated successfully:", data.value);
+        getProject(); // Refresh the staff list after the update is successful
+        activeDrawerLinkEdit.value = false;
+    } catch (error) {
+        console.error('Error updating data:', error);
+    }
+}
+
 onMounted(() => {
   getProject()
 })
@@ -195,25 +281,16 @@ onMounted(() => {
                     v-if="!res[col.key] && col.title === 'Edit'"
                     secondary
                     type='info'
-                    @click= null
+                    @click= editData(res)
                     >
                         {{ col.key }}
                     </n-button>
-
-                    <n-button 
-                    v-if="!res[col.key]  && col.title === 'Delete'"
-                    secondary strong type='error'
-                    @click=null
-                    :disabled="!editing[rowIndex]"
-                    >
-                        {{ col.key }}
-                    </n-button>
-
-                    <n-switch v-if="col.title==='Delete'" v-model:value="editing[rowIndex]" />
 
                     <div v-if="res[col.key] !== null && res[col.key] !== undefined ">
                       <div v-if="col.key === 'link'">
-                        <ul><a :href="res[col.key]" target="_blank">{{ truncateUrl(res[col.key]) }}</a> </ul>
+                        <ul>
+                        <NuxtLink :to="res[col.key]">{{ truncateUrl(res[col.key]) }}</NuxtLink>
+                        </ul>
                         <ul class="bg-green-200">{{ truncateUrl(res['description']) }}</ul>
                         <ul class="bg-green-100">{{ truncateUrl(res['footnote']) }}</ul>
                         <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
@@ -238,11 +315,31 @@ onMounted(() => {
             <tbody class="divide-y divide-gray-200">
               <tr v-for="(res, rowIndex) in personalAllLink">
                 <td v-for="col in columnsAll" class="px-2 py-2 text-sm font-medium text-gray-800 whitespace-nowrap">
+                  <n-button 
+                  v-if="!res[col.key]  && col.title === 'Delete'"
+                  secondary strong type='error'
+                  @click=deleteData(res)
+                  :disabled="!editingAll[rowIndex]"
+                  >
+                      {{ col.key }}
+                  </n-button>
+                  <n-button 
+                    v-if="!res[col.key] && col.title === 'Edit'"
+                    secondary
+                    type='info'
+                    @click= editData(res)
+                    >
+                        {{ col.key }}
+                    </n-button>
+                  <n-switch v-if="col.title==='Delete'" v-model:value="editingAll[rowIndex]" />
+
                   <div v-if="res[col.key] !== null && res[col.key] !== undefined ">
                     <div v-if="col.key === 'link'">
-                      <ul><a :href="res[col.key]" target="_blank">{{ truncateUrl(res[col.key]) }}</a> </ul>
-                      <ul class="bg-green-200">{{ truncateUrl(res['description']) }}</ul>
-                      <ul class="bg-green-100">{{ truncateUrl(res['footnote']) }}</ul>
+                      <ul>
+                        <NuxtLink :to="res[col.key]">{{ truncateUrl(res[col.key],length=20) }}</NuxtLink>
+                      </ul>
+                      <ul class="bg-green-200">{{ truncateUrl(res['description'],length=10) }}</ul>
+                      <ul class="bg-green-100">{{ truncateUrl(res['footnote'],length=10) }}</ul>
                       <ul class="bg-red-100">{{ res['startDate'] }} ~ {{ res['endDate'] }}</ul>
                     </div>
                     <div v-if="col.key === 'click'">
@@ -258,7 +355,7 @@ onMounted(() => {
     </div>
   </div>
   <n-drawer v-model:show="activeDrawerLinkAdd" :width="300" :placement="placementDrawer">
-      <n-drawer-content title="新增人員" closable>
+      <n-drawer-content title="新增Link" closable>
           <n-form>
               <n-form-item-row label="link">
                   <n-input placeholder="link" v-model:value="newLink.link" />
@@ -282,6 +379,35 @@ onMounted(() => {
               </div>
               <n-button type="primary" block secondary strong @click="addData">
               新增
+              </n-button>
+          </n-form>
+      </n-drawer-content>
+  </n-drawer>
+  <n-drawer v-model:show="activeDrawerLinkEdit" :width="300" :placement="placementDrawer">
+      <n-drawer-content title="修改Link" closable>
+          <n-form>
+              <n-form-item-row label="link">
+                  <n-input placeholder="link" v-model:value="editLink.link" />
+              </n-form-item-row>
+              <n-form-item-row label="description">
+                  <n-input placeholder="description" v-model:value="editLink.description" />
+              </n-form-item-row>
+              <n-form-item-row label="footnote">
+                  <n-input placeholder="footnote" v-model:value="editLink.footnote" />
+              </n-form-item-row>
+              <n-form-item-row label="startDate">
+                  <n-date-picker type="date"  v-model:value="convertStartDate(editLink).value" />
+              </n-form-item-row>
+              <n-form-item-row label="endDate">
+                  <n-date-picker type="date"  v-model:value="convertEndDate(editLink).value" />
+              </n-form-item-row>
+              <div v-if="errors.length" class="mb-6 py-4 px-6 bg-rose-400 rounded-xl">
+                  <p v-for="error in errors">
+                    {{ error }}
+                  </p>
+              </div>
+              <n-button type="primary" block secondary strong @click="updateData">
+              修改
               </n-button>
           </n-form>
       </n-drawer-content>
