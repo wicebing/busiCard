@@ -197,6 +197,20 @@ class UploadPersonalLinkImageView(views.APIView):
         personal_link.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@authentication_classes([JWTAuthentication, SessionAuthentication])
+class DeletePersonalLinkImageView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        print(1111111111111111,request.data.get('id'))
+        personal_link = Table_personalLink.objects.get(id=request.data.get('id'))
+
+        if personal_link.pic and default_storage.exists(personal_link.pic.name):
+            default_storage.delete(personal_link.pic.name)
+
+            personal_link.pic = None
+            personal_link.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class MyObtainTokenPairView(TokenObtainPairView):
     permission_classes = (permissions.AllowAny,)

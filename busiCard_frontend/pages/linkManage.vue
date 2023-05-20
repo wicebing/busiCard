@@ -254,6 +254,19 @@ async function updateData() {
     }
 }
 
+async function deleteImage (res) {
+  console.log('deleteImage', res)
+  const { data, pending, refresh, error } = await useFetch(`/api/upload/deletePersonalLinkImage/`, {
+      method: 'POST',
+      baseURL: apiConfig.API_ENDPOINT,
+      headers: {
+          Authorization: `JWT ${useStore.token}`
+      },
+      body: {id:res.id}
+  });
+  getProject()
+}
+
 const handlePersonalLinkImageUpload = async (file, fileList) => {
   // Create a FormData object
   const formData = new FormData();
@@ -465,7 +478,13 @@ onMounted(() => {
                   :on-finish="getProject">
                   上傳image
                 </n-upload>
+                <div v-if="editLink.pic">
+                  <n-button type="error" block secondary strong @click="deleteImage(editLink)">
+                    刪
+                  </n-button>
+                </div>
               </n-form-item-row>
+
               <div v-if="errors.length" class="mb-6 py-4 px-6 bg-rose-400 rounded-xl">
                   <p v-for="error in errors">
                     {{ error }}
