@@ -10,6 +10,7 @@ def user_directory_path(instance, filename):
 class Table_businessCard(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
+    description = models.CharField(max_length=500, default="", blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     logo = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     background = models.ImageField(upload_to=user_directory_path, null=True, blank=True)

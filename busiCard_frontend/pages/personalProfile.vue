@@ -29,7 +29,6 @@ async function getProject () {
       if (data.value) {
           Object.assign(personalProfile, data.value.results[0])
           console.log('personalProfile',personalProfile)
-          resetColor()
       } else {
           console.log('error',error)
       }
@@ -53,7 +52,6 @@ async function getAuth () {
           Object.assign(authProfile, data.value)
           Object.assign(authProfileOrigin, data.value)
           console.log('authProfile',authProfile)
-          resetColor()
       } else {
           console.log('error',error)
       }
@@ -63,30 +61,31 @@ async function getAuth () {
 }
 
 async function createPerson () {
-  console.log('createPerson')
-  errors.value = []
-  try{
-      const { data, pending, refresh, error } = await useFetch(`/api/businessCard/`, {
-          method: 'POST',
-          baseURL:apiConfig.API_ENDPOINT,
-          headers: {
-              Authorization: `JWT ${useStore.token}` 
-          },
-          body: {
-              name: personalProfile.name,
-              user: useStore.id,
-              color: personalProfile.color,
-          }
-      })
-      if (data.value) {
-          Object.assign(personalProfile, data.value)
-      } else {
-          console.log('error',error)
-          errors.value.push(error.value.data)
-      }
-  } catch (err) {
-      console.log('err',err)
-  }
+    resetColor()
+    console.log('createPerson')
+    errors.value = []
+    try{
+        const { data, pending, refresh, error } = await useFetch(`/api/businessCard/`, {
+            method: 'POST',
+            baseURL:apiConfig.API_ENDPOINT,
+            headers: {
+                Authorization: `JWT ${useStore.token}` 
+            },
+            body: {
+                name: personalProfile.name,
+                user: useStore.id,
+                color: personalProfile.color,
+            }
+        })
+        if (data.value) {
+            Object.assign(personalProfile, data.value)
+        } else {
+            console.log('error',error)
+            errors.value.push(error.value.data)
+        }
+    } catch (err) {
+        console.log('err',err)
+    }
 }
 
 async function updatePerson () {
@@ -101,6 +100,7 @@ async function updatePerson () {
               name: personalProfile.name,
               user: useStore.id,
               color: personalProfile.color,
+              description: personalProfile.description,
           }
       })
       if (data.value) {
@@ -188,6 +188,9 @@ onMounted(() => {
 
         <n-form-item-row label="顯示名稱">
           <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="personalProfile.name" />
+        </n-form-item-row>
+        <n-form-item-row label="顯示訊息" v-if="personalProfile.id">
+          <n-input :disabled="!editPersonal" placeholder="What message U want to show" v-model:value="personalProfile.description" />
         </n-form-item-row>
         <n-form-item-row label="logo" v-if="personalProfile.id">
           <n-image v-if="personalProfile.logo" width="600" v-model:src="personalProfile.logo" />

@@ -1,6 +1,6 @@
 <script setup>
 import { apiConfig } from "@/apiConfig";
-import { NDivider, NWatermark, NCard, NAvatar, NSpace, NForm, NImage } from 'naive-ui'
+import { NDivider, NWatermark, NEllipsis, NAvatar, NForm, NImage } from 'naive-ui'
 
 const route = useRoute()
 
@@ -97,12 +97,15 @@ onMounted(() => {
                     <n-avatar
                         v-if="personalProfile.logo"
                         round
-                        size="large"
+                        :size="168"
                         v-model:src="personalProfile.logo"
                     />
-                    <div>
-                        personalProfile description
-                    </div>                      
+                    <n-ellipsis expand-trigger="click" line-clamp="2" :tooltip="false">
+                        <div class="font-bold text-gray-600">
+                            {{ personalProfile.description }}
+                        </div> 
+                    </n-ellipsis>
+                     
                 </div>   
             </n-form>
             <n-divider />
