@@ -59,7 +59,7 @@ class PersonalLinkSerializer(serializers.ModelSerializer):
         return total if total else 0
     
     def get_unique_clicks(self, obj):
-        unique_clicks = Table_linkIPClick.objects.filter(link=obj).values('ip').distinct().count()
+        unique_clicks = Table_linkIPClick.objects.filter(link=obj).values('ip','clickTime').distinct().count()
         return unique_clicks if unique_clicks else 0
     
 class LinkIPClickSerializer(serializers.ModelSerializer):

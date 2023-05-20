@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, date
+from django.utils import timezone
 
 # Create your views here.
 from django.http import HttpResponse, JsonResponse
@@ -147,9 +148,14 @@ class LinkClickView(APIView):
 
         try:
             ipclick = Table_linkIPClick.objects.get(ip=ip, link=link)
-            # If it exists, increment the count
-            ipclick.count += 1
-            ipclick.save()
+            # If it exists, check the time difference
+            if timezone.now() - ipclick.clickTime > timedelta(minutes=60):
+                # If more than 60 minutes has passed since last click, create a new record
+                Table_linkIPClick.objects.create(ip=ip, link=link)
+            else:
+                # If not, increment the count
+                ipclick.count += 1
+                ipclick.save()
         except Table_linkIPClick.DoesNotExist:
             # If it doesn't exist, create a new one
             Table_linkIPClick.objects.create(ip=ip, link=link)
