@@ -1,5 +1,5 @@
 <script setup>
-import { NButton, NTabs, NTabPane, NSwitch, NDrawer, NDrawerContent, NSelect } from 'naive-ui'
+import { NButton, NTabs, NTabPane, NSwitch, NDrawer, NDrawerContent, NImage, NUpload } from 'naive-ui'
 import { NFormItemRow, NInput, NForm, NDatePicker } from 'naive-ui'
 import { apiConfig } from "@/apiConfig";
 
@@ -254,6 +254,25 @@ async function updateData() {
     }
 }
 
+const handlePersonalLinkImageUpload = async (file, fileList) => {
+  // Create a FormData object
+  const formData = new FormData();
+  // Append file to formData object
+  formData.set('id', editLink.id)
+  formData.append('file', file.raw);
+  
+
+  // Use useFetch to send the file to the server
+  const { data, error } = await useFetch(`/api/upload/personalLinkImage/`, {
+      method: 'POST',
+      baseURL: apiConfig.API_ENDPOINT,
+      headers: {
+          Authorization: `JWT ${useStore.token}`
+      },
+      body: formData
+  });
+}
+
 onMounted(() => {
   getProject()
 })
@@ -431,6 +450,21 @@ onMounted(() => {
               </n-form-item-row>
               <n-form-item-row label="endDate">
                   <n-date-picker type="date"  v-model:value="convertEndDate(editLink).value" />
+              </n-form-item-row>
+              <n-form-item-row label="pic">
+                <n-image v-if="editLink.pic" width="200" v-model:src="editLink.pic"/>
+                <n-upload 
+                  :action="`${apiConfig.API_ENDPOINT}/api/upload/personalLinkImage/`"
+                  :headers="{
+                    Authorization: `JWT ${useStore.token}`
+                  }"
+                  :data="{
+                    id: editLink.id
+                  }"
+                  list-type="image-card"
+                  :on-finish="getProject">
+                  上傳image
+                </n-upload>
               </n-form-item-row>
               <div v-if="errors.length" class="mb-6 py-4 px-6 bg-rose-400 rounded-xl">
                   <p v-for="error in errors">

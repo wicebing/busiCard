@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, date
 
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
@@ -179,7 +179,24 @@ class UploadLogoView(views.APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@authentication_classes([JWTAuthentication, SessionAuthentication])
+class UploadPersonalLinkImageView(views.APIView):
+    parser_classes = [parsers.MultiPartParser]
 
+    def post(self, request, *args, **kwargs):
+        file = request.data.get('file')
+
+        if not file:
+            return Response({"file": ["No file uploaded!"]}, status=status.HTTP_400_BAD_REQUEST)
+        personal_link = Table_personalLink.objects.get(id=request.data.get('id'))
+
+        if personal_link.pic and default_storage.exists(personal_link.pic.name):
+            default_storage.delete(personal_link.pic.name)
+
+        personal_link.pic = file
+        personal_link.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class MyObtainTokenPairView(TokenObtainPairView):
     permission_classes = (permissions.AllowAny,)

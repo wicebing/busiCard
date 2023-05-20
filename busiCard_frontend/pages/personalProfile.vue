@@ -190,11 +190,7 @@ onMounted(() => {
           <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="personalProfile.name" />
         </n-form-item-row>
         <n-form-item-row label="logo" v-if="personalProfile.id">
-          <n-image
-            v-if="personalProfile.logo"
-            width="600"
-            v-model:src="personalProfile.logo"
-          />
+          <n-image v-if="personalProfile.logo" width="600" v-model:src="personalProfile.logo" />
           <n-upload
           :action="`${apiConfig.API_ENDPOINT}/api/upload/logo/`"
           :headers="{
