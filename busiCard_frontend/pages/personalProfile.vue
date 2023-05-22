@@ -209,7 +209,7 @@ onMounted(() => {
         <n-form-item-row label="background" v-if="personalProfile.id">
         </n-form-item-row>
         
-        <n-form inline>        
+        <n-form inline v-if="personalProfile.id">        
           <n-form-item-row inline label="color" >
               <n-color-picker :modes="['hex']" :disabled="!editPersonal" v-model:value="personalProfile.color" />
           </n-form-item-row>

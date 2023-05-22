@@ -171,4 +171,4 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ALLOWED_HOSTS = ['192.168.50.232', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.50.2', 'localhost', '127.0.0.1']
