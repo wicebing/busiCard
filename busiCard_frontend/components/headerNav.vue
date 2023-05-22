@@ -9,18 +9,7 @@ const options= ref([
           key: 'userStaff',
           props: {
             onClick: () => {
-            //   message.success('Good!')
-            useRoute.push('/manage')
-            }
-          }
-        },
-        {
-          label: '班種組別',
-          key: 'shiftworks',
-          props: {
-            onClick: () => {
-            //   message.success('Good!')
-            useRoute.push('/shiftworks')
+              // message.success('Good!')
             }
           }
         },
@@ -30,7 +19,7 @@ const options= ref([
           props: {
             onClick: () => {
             //   message.success('Good!')
-            useRoute.push('/projects')
+            // useRoute.push('/projects')
             }
           }
         },

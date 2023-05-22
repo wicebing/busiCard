@@ -94,12 +94,15 @@ onMounted(() => {
             <!-- {{personalProfile}} -->
             <n-form>
                 <div class="space-y-2">
-                    <n-avatar
-                        v-if="personalProfile.logo"
-                        round
-                        :size="168"
-                        v-model:src="personalProfile.logo"
-                    />
+                    <div>
+                        <n-avatar
+                            v-if="personalProfile.logo"
+                            round
+                            :size="168"
+                            v-model:src="personalProfile.logo"
+                        />
+                    </div>
+
                     <n-ellipsis expand-trigger="click" line-clamp="2" :tooltip="false">
                         <div class="font-bold text-gray-600">
                             {{ personalProfile.description }}
