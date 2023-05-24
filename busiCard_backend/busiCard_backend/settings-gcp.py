@@ -90,6 +90,8 @@ DEBUG = env("DEBUG")
 # running in production. The URL will be known once you first deploy
 # to Cloud Run. This code takes the URL and converts it to both these settings formats.
 CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL", default=None)
+
+print("CLOUDRUN_SERVICE_URL", CLOUDRUN_SERVICE_URL)
 if CLOUDRUN_SERVICE_URL:
     ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
     CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
@@ -99,9 +101,8 @@ else:
     ALLOWED_HOSTS = ["*"]
 # [END cloudrun_django_csrf]
 
-
-# ALLOWED_HOSTS = ['192.168.50.2', 'localhost', '127.0.0.1']
-
+# ALLOWED_HOSTS = ['192.168.50.2', 'localhost', '127.0.0.1',"*"]
+print("ALLOWED_HOSTS", ALLOWED_HOSTS)
 
 # Application definition
 
