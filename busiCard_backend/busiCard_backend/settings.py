@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os, datetime
 
+from urllib.parse import urlparse
+
+import environ, io
+import google.auth
+from google.cloud import secretmanager
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
