@@ -91,18 +91,15 @@ DEBUG = env("DEBUG")
 # to Cloud Run. This code takes the URL and converts it to both these settings formats.
 CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL", default=None)
 
-print("CLOUDRUN_SERVICE_URL", CLOUDRUN_SERVICE_URL)
 if CLOUDRUN_SERVICE_URL:
-    ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
+    ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc, '*']
     CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 else:
     ALLOWED_HOSTS = ["*"]
 # [END cloudrun_django_csrf]
-
 # ALLOWED_HOSTS = ['192.168.50.2', 'localhost', '127.0.0.1',"*"]
-print("ALLOWED_HOSTS", ALLOWED_HOSTS)
 
 # Application definition
 
