@@ -1,9 +1,9 @@
 let API_ENDPOINT = '';
 
 if (process.env.NODE_ENV === 'production') {
-  API_ENDPOINT = 'https://your-production-url.com';
+  API_ENDPOINT = 'https://polls-service-n62funkaba-de.a.run.app';
 } else {
-  API_ENDPOINT = 'http://192.168.50.2:8000';
+  API_ENDPOINT = 'https://polls-service-n62funkaba-de.a.run.app';
 }
 
 export const apiConfig = {

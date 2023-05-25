@@ -1,0 +1,48 @@
+https://cloud.google.com/python/django/run#gcloud
+
+https://nuxtjs.org/deployments/google-cloud-run/
+
+
+gcloud secrets add-iam-policy-binding django_settings --member serviceAccount:1031589488745-compute@developer.gserviceaccount.com --role roles/secretmanager.secretAccessor
+
+
+gcloud secrets add-iam-policy-binding django_settings --member serviceAccount:1031589488745@cloudbuild.gserviceaccount.com --role roles/secretmanager.secretAccessor
+
+
+gcloud projects add-iam-policy-binding ybing-yabi-web --member serviceAccount:1031589488745@cloudbuild.gserviceaccount.com --role roles/cloudsql.client
+
+
+
+gcloud builds submit --config cloudmigrate.yaml --substitutions _INSTANCE_NAME=busicard-sql,_REGION=asia-east1,_SERVICE_NAME=busicard-backend
+
+gcloud run deploy polls-service --platform managed --region asia-east1 --image gcr.io/ybing-yabi-web/busicard-backend --add-cloudsql-instances ybing-yabi-web:asia-east1:busicard-sql --allow-unauthenticated
+
+
+SERVICE_URL=$(gcloud run services describe polls-service --platform managed --region asia-east1 --format https://polls-service-n62funkaba-de.a.run.app)
+
+gcloud run services update polls-service --platform managed --region asia-east1 --set-env-vars CLOUDRUN_SERVICE_URL=https://polls-service-n62funkaba-de.a.run.app
+
+gcloud run services describe polls-service --platform managed --region asia-east1 --format "value(status.url)"
+
+SERVICE_URL=$(gcloud run services describe polls-service --platform managed --region asia-east1 --format "value(status.url)")
+
+CLOUDRUN_SERVICE_URL=$SERVICE_URL
+
+
+DATABASE_URL=postgres://105969:105969@//cloudsql/ybing-yabi-web:asia-east1:busicard-sql/BUSICARD-DATABASE
+GS_BUCKET_NAME=ybing-yabi-web_busicard
+SECRET_KEY=django-insecure-lz&&49szu4-d4$h7sf^ma@$4vjrv@9ze$7$p!)ahgj1%1_05i+
+CLOUDRUN_SERVICE_URL=https://polls-service-n62funkaba-de.a.run.app
+
+gcloud builds submit --config cloudmigrate.yaml --substitutions _INSTANCE_NAME=busicard-sql,_REGION=asia-east1
+
+gcloud run deploy polls-service --platform managed --region asia-east1 --image gcr.io/ybing-yabi-web/busicard-backend
+
+
+echo DATABASE_URL=postgres://105969:105969@//cloudsql/ybing-yabi-web:asia-east1:busicard-sql/BUSICARD-DATABASE > .env
+echo GS_BUCKET_NAME=ybing-yabi-web_busicard >> .env
+echo SECRET_KEY=$(cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]'| fold -w 50 | head -n1) >> .env
+
+gcloud builds submit --tag gcr.io/ybing-yabi-web/busicard-frontend:1.0.0 .
+
+gcloud run deploy busicard --image gcr.io/ybing-yabi-web/busicard-frontend:1.0.0 --platform managed --port 3000 --region asia-east1 --allow-unauthenticated
