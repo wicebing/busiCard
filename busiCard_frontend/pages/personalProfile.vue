@@ -226,7 +226,7 @@ onMounted(() => {
                 {{ error }}
             </p>
         </div>
-        <n-button v-if="personalProfile.id" type="info" block secondary strong @click="updatePerson">
+        <n-button :disabled="!editPersonal" v-if="personalProfile.id" type="info" block secondary strong @click="updatePerson">
             修改
         </n-button>
         <n-button :disabled="!editPersonal" v-if="!personalProfile.id" type="info" block secondary strong @click="createPerson">
