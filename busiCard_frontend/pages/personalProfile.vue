@@ -187,10 +187,10 @@ onMounted(() => {
         <n-form inline> </n-form>
 
         <n-form-item-row label="顯示名稱">
-          <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="personalProfile.name" />
+          <n-input clearable :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="personalProfile.name" />
         </n-form-item-row>
         <n-form-item-row label="顯示訊息" v-if="personalProfile.id">
-          <n-input :disabled="!editPersonal" placeholder="What message U want to show" v-model:value="personalProfile.description" />
+          <n-input clearable :disabled="!editPersonal" placeholder="What message U want to show" v-model:value="personalProfile.description" />
         </n-form-item-row>
         <n-form-item-row label="logo" v-if="personalProfile.id">
           <n-image v-if="personalProfile.logo" width="600" v-model:src="personalProfile.logo" />
@@ -202,6 +202,7 @@ onMounted(() => {
           list-type="image-card"
           @file-change="handleLogoUpload"
           :disabled="!editPersonal"
+          accept="image/jpeg, image/png, image/gif, image/bmp, image/webp, image/svg+xml, image/tiff, image/x-icon, image/vnd.microsoft.icon"
           >
             上傳個人logo
           </n-upload>
@@ -228,14 +229,14 @@ onMounted(() => {
         <n-button v-if="personalProfile.id" type="info" block secondary strong @click="updatePerson">
             修改
         </n-button>
-        <n-button v-if="!personalProfile.id" type="info" block secondary strong @click="createPerson">
+        <n-button :disabled="!editPersonal" v-if="!personalProfile.id" type="info" block secondary strong @click="createPerson">
             新增
         </n-button>
 
         <n-divider />
         <div v-if="editPersonal">
           <n-form-item-row label="帳號名稱">
-          <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.username" />
+          <n-input clearable :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.username" />
           </n-form-item-row>
           <n-form-item-row label="密碼">
             <n-input clearable type="password" :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.password" />

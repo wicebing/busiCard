@@ -81,9 +81,9 @@ onMounted(() => {
     v-model:content="personalProfile.name"
     cross
     fullscreen
-    :font-size="64"
-    :line-height="64"
-    :width="400"
+    :font-size="58"
+    :line-height="58"
+    :width="360"
     :height="284"
     :x-offset="12"
     :y-offset="60"

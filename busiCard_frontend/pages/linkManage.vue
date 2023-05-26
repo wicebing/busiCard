@@ -1,6 +1,6 @@
 <script setup>
 import { NButton, NTabs, NTabPane, NSwitch, NDrawer, NDrawerContent, NImage, NUpload } from 'naive-ui'
-import { NFormItemRow, NInput, NForm, NDatePicker } from 'naive-ui'
+import { NFormItemRow, NInput, NForm, NDatePicker, NInputNumber } from 'naive-ui'
 import { apiConfig } from "@/apiConfig";
 
 const errors = ref([])
@@ -415,16 +415,16 @@ onMounted(() => {
       <n-drawer-content title="新增Link" closable>
           <n-form>
               <n-form-item-row label="link">
-                  <n-input placeholder="link" v-model:value="newLink.link" />
+                  <n-input clearable placeholder="link" v-model:value="newLink.link" />
               </n-form-item-row>
               <n-form-item-row label="description">
-                  <n-input placeholder="description" v-model:value="newLink.description" />
+                  <n-input clearable placeholder="description" v-model:value="newLink.description" />
               </n-form-item-row>
               <n-form-item-row label="footnote">
-                  <n-input placeholder="footnote" v-model:value="newLink.footnote" />
+                  <n-input clearable placeholder="footnote" v-model:value="newLink.footnote" />
               </n-form-item-row>
               <n-form-item-row label="sequence">
-                  <n-input placeholder="sequence" v-model:value="newLink.sequence" />
+                  <n-input-number placeholder="sequence" v-model:value="newLink.sequence" clearable />
               </n-form-item-row>
               <n-form-item-row label="startDate">
                   <n-date-picker type="date"  v-model:value="newLink.startDateStr" />
@@ -447,16 +447,16 @@ onMounted(() => {
       <n-drawer-content title="修改Link" closable>
           <n-form>
               <n-form-item-row label="link">
-                  <n-input placeholder="link" v-model:value="editLink.link" />
+                  <n-input clearable placeholder="link" v-model:value="editLink.link" />
               </n-form-item-row>
               <n-form-item-row label="description">
-                  <n-input placeholder="description" v-model:value="editLink.description" />
+                  <n-input clearable placeholder="description" v-model:value="editLink.description" />
               </n-form-item-row>
               <n-form-item-row label="footnote">
-                  <n-input placeholder="footnote" v-model:value="editLink.footnote" />
+                  <n-input clearable placeholder="footnote" v-model:value="editLink.footnote" />
               </n-form-item-row>
               <n-form-item-row label="sequence">
-                  <n-input placeholder="sequence" v-model:value="editLink.sequence" />
+                  <n-input-number placeholder="sequence" v-model:value="editLink.sequence" clearable />
               </n-form-item-row>
               <n-form-item-row label="startDate">
                   <n-date-picker type="date"  v-model:value="convertStartDate(editLink).value" />
@@ -475,6 +475,7 @@ onMounted(() => {
                     id: editLink.id
                   }"
                   list-type="image-card"
+                  accept="image/jpeg, image/png, image/gif, image/bmp, image/webp, image/svg+xml, image/tiff, image/x-icon, image/vnd.microsoft.icon"
                   :on-finish="getProject">
                   上傳image
                 </n-upload>

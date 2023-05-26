@@ -139,7 +139,7 @@ onMounted(() => {
                 <n-tab-pane name="signin" tab="Sign in">
                     <n-form>
                         <n-form-item-row label="Username">
-                            <n-input placeholder="Your name or email" v-model:value="staff.name"/>
+                            <n-input clearable placeholder="Your name or email" v-model:value="staff.name"/>
                         </n-form-item-row>
                         <n-form-item-row label="Password">
                             <n-input
@@ -147,6 +147,7 @@ onMounted(() => {
                             show-password-on="click"
                             placeholder="Your password"
                             v-model:value="staff.password"
+                            clearable
                             >
                             <template #password-visible-icon>
                                 <n-icon :size="16" :component="GlassesOutline" />
@@ -169,13 +170,14 @@ onMounted(() => {
                 <n-tab-pane name="signup" tab="Sign up">
                     <n-form>
                         <n-form-item-row label="Username">
-                            <n-input placeholder="Your name" v-model:value="staff.name"/>
+                            <n-input clearable placeholder="Your name" v-model:value="staff.name"/>
                         </n-form-item-row>
                         <n-form-item-row label="Email">
-                            <n-input placeholder="Your email" v-model:value="staff.email"/>
+                            <n-input clearable placeholder="Your email" v-model:value="staff.email"/>
                         </n-form-item-row>
                         <n-form-item-row label="Password">
                             <n-input
+                            clearable
                             type="password"
                             show-password-on="click"
                             placeholder="Your password"
@@ -191,6 +193,7 @@ onMounted(() => {
                         </n-form-item-row>
                         <n-form-item-row label="Re-enter Password">
                             <n-input
+                            clearable
                             type="password"
                             show-password-on="click"
                             placeholder="Confirm your password"
