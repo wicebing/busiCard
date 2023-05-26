@@ -107,7 +107,7 @@ function truncateUrl(url, length = 30) {
 }
 
 function convertStartDate(editLink) {
-    console.log('convertDate', editLink.startDate)
+    // console.log('convertDate', editLink.startDate)
   return computed({
     get: () => new Date(editLink.startDate).getTime(),
     set: (newValue) => (editLink.startDate = formatDate(new Date(newValue))),
@@ -115,7 +115,7 @@ function convertStartDate(editLink) {
 }
 
 function convertEndDate(editLink) {
-    console.log('convertDate', editLink.endDate)
+    // console.log('convertDate', editLink.endDate)
   return computed({
     get: () => new Date(editLink.endDate).getTime(),
     set: (newValue) => (editLink.endDate = formatDate(new Date(newValue))),
@@ -123,7 +123,7 @@ function convertEndDate(editLink) {
 }
 
 async function editData(row) {
-    console.log("Row:", row)
+    // console.log("Row:", row)
     Object.assign(editLink, row)
     Object.assign(originalLink, row); // Store the original data before editing
     console.log("editProject:", editLink)
@@ -131,7 +131,7 @@ async function editData(row) {
 }
 
 async function getProject () {
-  console.log('getProject')
+  // console.log('getProject')
   for (const key in personalLink) {
         delete personalLink[key];
   }
@@ -152,21 +152,21 @@ async function getProject () {
           // Get today's date
           const today = new Date();
           today.setHours(0, 0, 0, 0);  // Set the time to 00:00:00
-          console.log('today',today)
+          // console.log('today',today)
 
           // Filter personalLink where endDate is not before today
           const filteredPersonalLink = data.value.results.filter(link => {
               const endDate = new Date(link.endDate);
               const startDate = new Date(link.startDate);
-              console.log('endDate',endDate)
-              console.log('startDate',startDate)
+              // console.log('endDate',endDate)
+              // console.log('startDate',startDate)
               return endDate >= today && startDate <= today;
           });
           Object.assign(personalLink, filteredPersonalLink)
           Object.assign(personalAllLink, data.value.results)
-          console.log('personalLink',personalLink)
+          // console.log('personalLink',personalLink)
       } else {
-          console.log('error',error)
+          // console.log('error',error)
           errors.value.push(error.value.data)
       }
   } catch (err) {
@@ -178,10 +178,10 @@ async function addData() {
   errors.value = []
   try {
     console.log('addData')
-    console.log('NEWdate',newLink)
+    // console.log('NEWdate',newLink)
     newLink.startDate = formatDate(new Date(newLink.startDateStr))
     newLink.endDate = formatDate(new Date(newLink.endDateStr))
-    console.log('NEWdate',JSON.stringify(newLink))
+    // console.log('NEWdate',JSON.stringify(newLink))
     const { data, pending, refresh, error } = await useFetch('/api/personalLink/', {
         method: 'POST',
         baseURL:apiConfig.API_ENDPOINT,
@@ -192,11 +192,11 @@ async function addData() {
     })
 
     if (data.value) {
-        console.log('NEWdate data.value',data.value)
+        // console.log('NEWdate data.value',data.value)
         getProject()
         switchAddLink()
     } else {
-        console.log('error',error)
+        // console.log('error',error)
         errors.value.push(error.value.data)
     }
   } catch (error) {
@@ -206,7 +206,7 @@ async function addData() {
 
 async function deleteData(row) {
     try {
-        console.log('deleteData', row)
+        // console.log('deleteData', row)
         const { data, pending, refresh, error } = await useFetch(`/api/personalLink/${row.id}`, {
           method: 'DELETE',
           baseURL:apiConfig.API_ENDPOINT,
@@ -215,9 +215,9 @@ async function deleteData(row) {
           },
         })
 
-        console.log('deleteData', row)
-        console.log('Deleted successfully')
-        console.log('Error: ', error.value)
+        // console.log('deleteData', row)
+        // console.log('Deleted successfully')
+        // console.log('Error: ', error.value)
     } catch (error) {
         console.error('Error deleting data:', error);
     }
@@ -225,16 +225,16 @@ async function deleteData(row) {
 }
 
 async function updateData() {
-    console.log("Updating data:", editLink);
+    // console.log("Updating data:", editLink);
     const updatedFields = {}
     for (const key in editLink) {
         if (editLink[key] !== originalLink[key]) {
             updatedFields[key] = editLink[key];
-            console.log("Updated fields key:", key);
+            // console.log("Updated fields key:", key);
         }        
     }
-    console.log("Updated fields:", updatedFields);
-    console.log(editLink.id)
+    // console.log("Updated fields:", updatedFields);
+    // console.log(editLink.id)
 
     try {
         const { data, pending, refresh, error } = await useFetch(`/api/personalLink/${editLink.id}/`, {
@@ -246,16 +246,16 @@ async function updateData() {
             body: JSON.stringify(updatedFields),
         });
 
-        console.log("Updated successfully:", data.value);
+        // console.log("Updated successfully:", data.value);
         getProject(); // Refresh the staff list after the update is successful
         activeDrawerLinkEdit.value = false;
     } catch (error) {
-        console.error('Error updating data:', error);
+        // console.error('Error updating data:', error);
     }
 }
 
 async function deleteImage (res) {
-  console.log('deleteImage', res)
+  // console.log('deleteImage', res)
   const { data, pending, refresh, error } = await useFetch(`/api/upload/deletePersonalLinkImage/`, {
       method: 'POST',
       baseURL: apiConfig.API_ENDPOINT,

@@ -16,7 +16,7 @@ function resetColor () {
 }
 
 async function getProject () {
-  console.log('getProject')
+//   console.log('getProject')
   try{
       const { data, pending, refresh, error } = await useFetch(`/api/businessCard/?user=${useStore.id}`, {
           method: 'GET',
@@ -28,7 +28,7 @@ async function getProject () {
 
       if (data.value) {
           Object.assign(personalProfile, data.value.results[0])
-          console.log('personalProfile',personalProfile)
+        //   console.log('personalProfile',personalProfile)
       } else {
           console.log('error',error)
       }
@@ -38,7 +38,7 @@ async function getProject () {
 }
 
 async function getAuth () {
-  console.log('getAuth')
+//   console.log('getAuth')
   try{
       const { data, pending, refresh, error } = await useFetch(`/api/regist/${useStore.id}`, {
           method: 'GET',
@@ -47,11 +47,11 @@ async function getAuth () {
               Authorization: `JWT ${useStore.token}` 
           }
       })
-      console.log('data',data)
+    //   console.log('data',data)
       if (data.value) {
           Object.assign(authProfile, data.value)
           Object.assign(authProfileOrigin, data.value)
-          console.log('authProfile',authProfile)
+        //   console.log('authProfile',authProfile)
       } else {
           console.log('error',error)
       }
@@ -62,7 +62,7 @@ async function getAuth () {
 
 async function createPerson () {
     resetColor()
-    console.log('createPerson')
+    // console.log('createPerson')
     errors.value = []
     try{
         const { data, pending, refresh, error } = await useFetch(`/api/businessCard/`, {
@@ -149,7 +149,7 @@ async function updateAuth () {
           updatedFields[key] = authProfile[key];
       }        
   }
-  console.log('updatedFields',updatedFields)
+//   console.log('updatedFields',updatedFields)
   try {
       const { data, pending, refresh, error } = await useFetch(`/api/regist/${useStore.id}/`, {
           method: 'PATCH',
@@ -214,7 +214,7 @@ onMounted(() => {
               <n-color-picker :modes="['hex']" :disabled="!editPersonal" v-model:value="personalProfile.color" />
           </n-form-item-row>
           <n-form-item-row>
-            <n-button v-if="editPersonal" type="default" round block secondary strong @click="resetColor">
+            <n-button v-if="editPersonal" :disabled="!editPersonal" type="default" round block secondary strong @click="resetColor">
               reset Color
             </n-button>            
           </n-form-item-row>
@@ -238,10 +238,10 @@ onMounted(() => {
           <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.username" />
           </n-form-item-row>
           <n-form-item-row label="密碼">
-            <n-input type="password" :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.password" />
+            <n-input clearable type="password" :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.password" />
           </n-form-item-row> 
           <n-form-item-row label="Email">
-            <n-input :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.email" />
+            <n-input clearable :disabled="!editPersonal" placeholder="What name do you want to show" v-model:value="authProfile.email" />
           </n-form-item-row>      
           <n-button type="info" block secondary strong @click="updateAuth">
               修改

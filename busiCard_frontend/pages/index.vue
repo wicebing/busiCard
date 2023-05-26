@@ -8,7 +8,7 @@ const errors = ref([])
 
 async function getCurrentUser() {
     errors.value = []
-    console.log('getCurrentUser by token',useStore.token)
+    // console.log('getCurrentUser by token',useStore.token)
     try{
         const { data, pending, refresh, error } = await useFetch('/api/whoami/', {
             method: 'GET',
@@ -19,9 +19,9 @@ async function getCurrentUser() {
         });
 
         if (error.value) {
-            console.log('Error:', error.value);
+            // console.log('Error:', error.value);
         } else {
-            console.log('Current user:', data.value);
+            // console.log('Current user:', data.value);
             if (data.value) {
                 useStore.setUserDetail(data.value.id,
                 data.value.username,
@@ -30,11 +30,11 @@ async function getCurrentUser() {
                 data.value.is_superuser,
                 ) 
             } 
-            console.log('getUser',useStore.getUserDetail())
+            // console.log('getUser',useStore.getUserDetail())
             navigateTo('/')
         }       
     } catch (error) {
-        console.log('ALLerror',error)
+        // console.log('ALLerror',error)
         errors.value.push('please try again')
     }
 }

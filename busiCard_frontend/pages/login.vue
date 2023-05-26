@@ -19,7 +19,7 @@ const useStore = useUserStore()
 // const config = useRuntimeConfig()
 
 async function commitSignup () {
-    console.log('commitSignup')
+    // console.log('commitSignup')
     errors.value = []
     // const { data: count } = await useFetch('/regist',{
     // method: 'GET',
@@ -43,20 +43,20 @@ async function commitSignup () {
         // errors.value.push(error)
         // errors.value.push(error.value)
         if (error.value){
-            console.log('error',error.value.data)
+            // console.log('error',error.value.data)
             errors.value.push(error.value.data)
         }
         // errors.value.push('please input username or email')
         commitLogin ()
     } catch (error) {
-        console.log('ALLerror',error)
+        // console.log('ALLerror',error)
         errors.value.push('please try again')
     }
 
 }
 
 async function commitLogin () {
-    console.log('commitLogin')
+    // console.log('commitLogin')
     errors.value = []
     const { data, pending, refresh, error } = await useFetch('/token/', {
         method: 'POST',
@@ -67,16 +67,16 @@ async function commitLogin () {
         }
     })
     // const { data } = await useFetch(() => `/api/hello/${count.value}`, { params: { token: 123 } })
-    console.log('data',data.value)
-    console.log('error',error)
+    // console.log('data',data.value)
+    // console.log('error',error)
 
     if (error.value){
-        console.log('error',error.value.data.detail)
+        // console.log('error',error.value.data.detail)
         errors.value.push(error.value)
     }
     if (data.value){
         useStore.setToken(data.value.access)
-        console.log('useStore',useStore.token,useStore.$state.isAuthenticated)
+        // console.log('useStore',useStore.token,useStore.$state.isAuthenticated)
         getCurrentUser()
     }
 
@@ -96,7 +96,7 @@ async function getCurrentUser() {
         if (error.value) {
             console.log('Error:', error.value);
         } else {
-            console.log('Current user:', data.value);
+            // console.log('Current user:', data.value);
             if (data.value) {
                 useStore.setUserDetail(data.value.id,
                 data.value.username,
@@ -105,11 +105,11 @@ async function getCurrentUser() {
                 data.value.is_superuser,
                 ) 
             } 
-            console.log('getUser',useStore.getUserDetail())
+            // console.log('getUser',useStore.getUserDetail())
             navigateTo('/')
         }        
     } catch (error) {
-        console.log('ALLerror',error)
+        // console.log('ALLerror',error)
         errors.value.push('please try again')
     }
 }

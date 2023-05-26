@@ -11,7 +11,7 @@ export const useUserStore = definePiniaStore('userStore', ()=>{
 
     // Initialize the store from local storage if possible
     const initStore = () => {
-        console.log('Initialized user', localStorage)
+        // console.log('Initialized user', localStorage)
         if (localStorage.getItem('token')) {
             token.value = localStorage.getItem('token') as string
             isAuthenticated.value = localStorage.getItem('isAuthenticated') === 'true'
@@ -21,22 +21,22 @@ export const useUserStore = definePiniaStore('userStore', ()=>{
             is_staff.value = localStorage.getItem('is_staff') === 'true'
             is_superuser.value = localStorage.getItem('is_superuser') === 'true'
 
-            console.log('Initialized user token:', token.value)
+            // console.log('Initialized user token:', token.value)
         }
     }
 
     const setToken = (posttoken: string) => {
-        console.log('Setting token:', posttoken)
+        // console.log('Setting token:', posttoken)
         isAuthenticated.value = true
         token.value = posttoken
         localStorage.setItem('token', posttoken) // Store the token in local storage
         localStorage.setItem('isAuthenticated', 'true')
-        console.log('Storage token:', localStorage)
-        console.log('Getting token:', localStorage.getItem('token'))
+        // console.log('Storage token:', localStorage)
+        // console.log('Getting token:', localStorage.getItem('token'))
     };
 
     const removeToken = () => {
-        console.log('Removing token')
+        // console.log('Removing token')
         isAuthenticated.value = false
         token.value = ''
         localStorage.removeItem('token') // Remove the token from local storage
@@ -53,7 +53,7 @@ export const useUserStore = definePiniaStore('userStore', ()=>{
         POSTemail: string,
         POSTis_staff: boolean,
         POSTis_superuser: boolean,) => {
-        console.log('Setting user detail:',POSTusername)
+        // console.log('Setting user detail:',POSTusername)
         id.value = POSTid
         username.value = POSTusername
         email.value = POSTemail
@@ -68,7 +68,7 @@ export const useUserStore = definePiniaStore('userStore', ()=>{
     }
 
     const getUserDetail = () => {
-        console.log("Getting user detail", id.value);
+        // console.log("Getting user detail", id.value);
         return {
             id: id.value,
             username: username.value,
@@ -79,7 +79,7 @@ export const useUserStore = definePiniaStore('userStore', ()=>{
     }
 
     const removeUserDetail = () => {
-        console.log('Removing user detail')
+        // console.log('Removing user detail')
         id.value = ''
         username.value = ''
         email.value = ''

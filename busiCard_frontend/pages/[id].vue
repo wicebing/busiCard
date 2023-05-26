@@ -12,7 +12,7 @@ const personalAllLink = reactive({})
 const personalProfile = reactive({})
 
 async function getPerson () {
-  console.log('getPerson',`/api/businessCard/?auth=${id}`)
+//   console.log('getPerson',`/api/businessCard/?auth=${id}`)
   try{
       const data  = await $fetch(`/api/businessCard/?auth=${id}`, {
           method: 'GET',
@@ -22,7 +22,7 @@ async function getPerson () {
       if (data) {
         // console.log('personalProfile', data.results[0])
         Object.assign(personalProfile, data.results[0])
-        console.log('personalProfile',personalProfile)
+        // console.log('personalProfile',personalProfile)
         backgroundColor.value = personalProfile.color
         getLinks (personalProfile)
       } else {
@@ -46,9 +46,9 @@ async function getLinks (personalProfile) {
 
       if (data.value) {
           Object.assign(personalAllLink, data.value.results)
-          console.log('personalLink',personalLink)
+        //   console.log('personalLink',personalLink)
       } else {
-          console.log('errorgetLinks',error)
+        //   console.log('errorgetLinks',error)
           errors.value.push(error.value.data)
       }
   } catch (err) {
@@ -57,7 +57,7 @@ async function getLinks (personalProfile) {
 }
 
 async function handleLinkClick(linkId) {
-    console.log('handleLinkClick',linkId)
+    // console.log('handleLinkClick',linkId)
     const ip = '...' // Retrieve the user's IP address here
     const { data, pending, refresh, error } = await useFetch('/api/linkClick/', {
         method: 'POST',
@@ -83,7 +83,7 @@ onMounted(() => {
     fullscreen
     :font-size="64"
     :line-height="64"
-    :width="284"
+    :width="400"
     :height="284"
     :x-offset="12"
     :y-offset="60"
